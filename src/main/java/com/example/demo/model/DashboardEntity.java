@@ -9,15 +9,15 @@ import javax.persistence.Table;
 @Table(name="Dashboard")
 public class DashboardEntity {
     @Id
-    public int id;
+    public Long id;
     public String name;
     public String view;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

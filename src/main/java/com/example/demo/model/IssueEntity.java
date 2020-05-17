@@ -13,21 +13,13 @@ public class IssueEntity {
     private Long id;
     @Column
     private String key;
-    @Column
     private Date created;
-    @Column
     private Integer aggregatetimeoriginalestimate;
-    @Column
     private Integer timeestimate;
-    @Column
     private Integer timespent;
-    @Column
     private Long idProject;
-    @Column
     private Long idSprint;
-    @Column
     private Long idUser;
-    @Column
     private Long idIssueType;
     private Long idPriority;
     private Long idStatusIssue;

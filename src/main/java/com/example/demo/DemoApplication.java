@@ -2,6 +2,8 @@ package com.example.demo;
 
 import com.example.demo.mapperClass.Dashboard;
 import com.example.demo.mapperClass.DashboardResponse;
+import com.example.demo.mapperClass.FieldsResponse;
+import com.example.demo.mapperClass.IssueResponse;
 import com.example.demo.model.DashboardEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,19 +40,19 @@ public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
 
-        HttpResponse<DashboardResponse> response = null;
+        HttpResponse<FieldsResponse> response = null;
         try {
-            response = Unirest.get("https://tyapysheva.atlassian.net/rest/api/2/dashboard")
+            response = Unirest.get("https://tyapysheva.atlassian.net/rest/api/2/search?jql=project=HUQG&maxResults=1")
                     .basicAuth("onelovezenit@gmail.com","dw2Xw44FxbRiDXvpbs4NBFFD")
                     .header("Accept","application/json")
-                    .asObject(DashboardResponse.class);
+                    .asObject(FieldsResponse.class);
         } catch (UnirestException e) {
             e.printStackTrace();
         }
 
         if (response.getStatus() == HttpStatus.SC_OK) {
-            DashboardResponse body = response.getBody();
-//            System.out.println(Arrays.toString(body.dashboards));
+            FieldsResponse body = response.getBody();
+            System.out.println(Arrays.toString(body.fields));
         }
 
 //        JSONObject myObj = response.getBody().getObject();
