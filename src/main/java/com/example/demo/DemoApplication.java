@@ -40,19 +40,19 @@ public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
 
-        HttpResponse<FieldsResponse> response = null;
+        HttpResponse<DashboardResponse> response = null;
         try {
             response = Unirest.get("https://tyapysheva.atlassian.net/rest/api/2/search?jql=project=HUQG&maxResults=1")
                     .basicAuth("onelovezenit@gmail.com","dw2Xw44FxbRiDXvpbs4NBFFD")
                     .header("Accept","application/json")
-                    .asObject(FieldsResponse.class);
+                    .asObject(DashboardResponse.class);
         } catch (UnirestException e) {
             e.printStackTrace();
         }
 
         if (response.getStatus() == HttpStatus.SC_OK) {
-            FieldsResponse body = response.getBody();
-            System.out.println(Arrays.toString(body.fields));
+            DashboardResponse body = response.getBody();
+ //           System.out.println(Arrays.toString(body.fields));
         }
 
 //        JSONObject myObj = response.getBody().getObject();

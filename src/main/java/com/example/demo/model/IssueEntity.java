@@ -3,6 +3,8 @@ package com.example.demo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -12,111 +14,29 @@ public class IssueEntity {
     @Id
     private Long id;
     @Column
-    private String key;
+    private String keyIs;
     private Date created;
+    @Column(name="aggregate")
     private Integer aggregatetimeoriginalestimate;
     private Integer timeestimate;
     private Integer timespent;
-    private Long idProject;
-    private Long idSprint;
-    private Long idUser;
-    private Long idIssueType;
-    private Long idPriority;
-    private Long idStatusIssue;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private ProjectEntity project;
+    @ManyToOne
+    @JoinColumn(name = "sprint_id")
+    private Sprint sprint;
+    @ManyToOne
+    @JoinColumn(name = "userEntity_id")
+    private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "issueType_id")
+    private IssueType issueType;
+    @ManyToOne
+    @JoinColumn(name = "priority_id")
+    private Priority priority;
+    @ManyToOne
+    @JoinColumn(name = "statusIssue_id")
+    private StatusIssue statusIssue;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Integer getAggregatetimeoriginalestimate() {
-        return aggregatetimeoriginalestimate;
-    }
-
-    public Integer getTimeestimate() {
-        return timeestimate;
-    }
-
-    public Integer getTimespent() {
-        return timespent;
-    }
-
-    public Long getIdProject() {
-        return idProject;
-    }
-
-    public Long getIdSprint() {
-        return idSprint;
-    }
-
-    public Long getIdUser() {
-        return idUser;
-    }
-
-    public Long getIdIssueType() {
-        return idIssueType;
-    }
-
-    public Long getIdPriority() {
-        return idPriority;
-    }
-
-    public Long getIdStatusIssue() {
-        return idStatusIssue;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public void setAggregatetimeoriginalestimate(Integer aggregatetimeoriginalestimate) {
-        this.aggregatetimeoriginalestimate = aggregatetimeoriginalestimate;
-    }
-
-    public void setTimeestimate(Integer timeestimate) {
-        this.timeestimate = timeestimate;
-    }
-
-    public void setTimespent(Integer timespent) {
-        this.timespent = timespent;
-    }
-
-    public void setIdProject(Long idProject) {
-        this.idProject = idProject;
-    }
-
-    public void setIdSprint(Long idSprint) {
-        this.idSprint = idSprint;
-    }
-
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
-    }
-
-    public void setIdIssueType(Long idIssueType) {
-        this.idIssueType = idIssueType;
-    }
-
-    public void setIdPriority(Long idPriority) {
-        this.idPriority = idPriority;
-    }
-
-    public void setIdStatusIssue(Long idStatusIssue) {
-        this.idStatusIssue = idStatusIssue;
-    }
 }

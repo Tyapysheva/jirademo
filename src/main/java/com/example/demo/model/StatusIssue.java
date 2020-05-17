@@ -2,7 +2,10 @@ package com.example.demo.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -10,20 +13,8 @@ public class StatusIssue {
     @Id
     private Long id;
     private String name;
+    @OneToMany(mappedBy = "statusIssue")
+    private List<IssueEntity> issues = new ArrayList<IssueEntity>();
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
