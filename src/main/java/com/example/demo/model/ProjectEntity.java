@@ -17,7 +17,7 @@ public class ProjectEntity{
     private String keyP;
     private String name;
     @OneToMany(mappedBy = "projectS")
-    private List<Sprint> sprints = new ArrayList<Sprint>();
+    private List<SprintEntity> sprints = new ArrayList<SprintEntity>();
     @OneToMany(mappedBy = "project")
     private List<IssueEntity> issues = new ArrayList<IssueEntity>();
     private String projectTypeKey;

@@ -1,5 +1,7 @@
 package com.example.demo.mapperClass;
 
-public class DashboardResponse {
-    public Dashboard[] dashboards;
+import java.util.List;
+
+public class DashboardResponse extends Response {
+    public List<Dashboard> dashboards;
 }

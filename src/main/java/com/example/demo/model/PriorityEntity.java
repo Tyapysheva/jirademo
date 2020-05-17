@@ -7,16 +7,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 @Table
-public class IssueType {
+public class PriorityEntity {
     @Id
     private Long id;
     @Column
-    private String description;
+    private String self;
     private String name;
-    private boolean subtask;
-    @OneToMany(mappedBy = "issueType")
-    private List<IssueEntity> issues;
+    @OneToMany(mappedBy = "priority")
+    private List<IssueEntity> issues = new ArrayList<IssueEntity>();
 }

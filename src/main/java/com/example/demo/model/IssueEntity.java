@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.example.demo.mapperClass.IssueType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,7 +18,7 @@ public class IssueEntity {
     @Column
     private String keyIs;
     private Date created;
-    @Column(name="aggregate")
+    @Column(name = "aggregate")
     private Integer aggregatetimeoriginalestimate;
     private Integer timeestimate;
     private Integer timespent;
@@ -25,18 +27,113 @@ public class IssueEntity {
     private ProjectEntity project;
     @ManyToOne
     @JoinColumn(name = "sprint_id")
-    private Sprint sprint;
+    private SprintEntity sprint;
     @ManyToOne
     @JoinColumn(name = "userEntity_id")
     private UserEntity user;
     @ManyToOne
     @JoinColumn(name = "issueType_id")
-    private IssueType issueType;
+    private IssueTypeEntity issueType;
     @ManyToOne
     @JoinColumn(name = "priority_id")
-    private Priority priority;
+    private PriorityEntity priority;
     @ManyToOne
     @JoinColumn(name = "statusIssue_id")
-    private StatusIssue statusIssue;
+    private IssueStatusEntity issueStatus;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getKeyIs() {
+        return keyIs;
+    }
+
+    public void setKeyIs(String keyIs) {
+        this.keyIs = keyIs;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Integer getAggregatetimeoriginalestimate() {
+        return aggregatetimeoriginalestimate;
+    }
+
+    public void setAggregatetimeoriginalestimate(Integer aggregatetimeoriginalestimate) {
+        this.aggregatetimeoriginalestimate = aggregatetimeoriginalestimate;
+    }
+
+    public Integer getTimeestimate() {
+        return timeestimate;
+    }
+
+    public void setTimeestimate(Integer timeestimate) {
+        this.timeestimate = timeestimate;
+    }
+
+    public Integer getTimespent() {
+        return timespent;
+    }
+
+    public void setTimespent(Integer timespent) {
+        this.timespent = timespent;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
+    }
+
+    public SprintEntity getSprint() {
+        return sprint;
+    }
+
+    public void setSprint(SprintEntity sprint) {
+        this.sprint = sprint;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public IssueTypeEntity getIssueType() {
+        return issueType;
+    }
+
+    public void setIssueType(IssueTypeEntity issueType) {
+        this.issueType = issueType;
+    }
+
+    public PriorityEntity getPriority() {
+        return priority;
+    }
+
+    public void setPriority(PriorityEntity priority) {
+        this.priority = priority;
+    }
+
+    public IssueStatusEntity getIssueStatus() {
+        return issueStatus;
+    }
+
+    public void setIssueStatus(IssueStatusEntity issueStatus) {
+        this.issueStatus = issueStatus;
+    }
 }

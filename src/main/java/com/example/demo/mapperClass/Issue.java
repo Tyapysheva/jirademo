@@ -1,11 +1,9 @@
 package com.example.demo.mapperClass;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Issue {
     public Long id;
     public String key;
+    public IssueFields fields;
 
     @Override
     public String toString() {

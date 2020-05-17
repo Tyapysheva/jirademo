@@ -1,5 +1,7 @@
 package com.example.demo.mapperClass;
 
-public class IssueResponse {
-    public Issue[] issues;
+import java.util.List;
+
+public class IssueResponse extends Response {
+    public List<Issue> issues;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -9,12 +10,13 @@ import java.util.List;
 
 @Entity
 @Table
-public class StatusIssue {
+public class IssueTypeEntity {
     @Id
     private Long id;
+    @Column
+    private String description;
     private String name;
-    @OneToMany(mappedBy = "statusIssue")
-    private List<IssueEntity> issues = new ArrayList<IssueEntity>();
-
-
+    private boolean subtask;
+    @OneToMany(mappedBy = "issueType")
+    private List<IssueEntity> issues;
 }

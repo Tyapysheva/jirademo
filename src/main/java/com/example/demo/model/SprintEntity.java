@@ -10,7 +10,7 @@ import java.time.DateTimeException;
 import java.util.Date;
 @Entity
 @Table
-public class Sprint {
+public class SprintEntity {
     @Id
     private Long id;
     @Column
