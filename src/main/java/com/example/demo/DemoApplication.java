@@ -46,7 +46,7 @@ public class DemoApplication {
 
         IssueDAL issueDAL = new IssueDAL();
         List<IssueEntity> issues = issueDAL.getIssues();
-        System.out.format("Была получена информация о {%i} задачах", issues.size());
+        System.out.format("Была получена информация о %d задачах", issues.size());
 
         HttpResponse<DashboardResponse> response = null;
         try {

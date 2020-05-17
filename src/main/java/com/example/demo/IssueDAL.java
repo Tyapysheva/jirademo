@@ -8,6 +8,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -15,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
+
 public class IssueDAL {
-    @Autowired
-    private ModelMapper modelMapper;
+//    @Autowired
+    private ModelMapper modelMapper = modelMapper();
 
     private static String username = "onelovezenit@gmail.com";
     private static String token = "dw2Xw44FxbRiDXvpbs4NBFFD";
@@ -52,5 +55,16 @@ public class IssueDAL {
         issueEntity.setProject(modelMapper.map(issue.fields.project, ProjectEntity.class));
         issueEntity.setUser(modelMapper.map(issue.fields.assignee, UserEntity.class));
         return issueEntity;
+    }
+
+    // Временная конструкция, здесь её по идее быть не должно
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(PRIVATE);
+        return mapper;
     }
 }
