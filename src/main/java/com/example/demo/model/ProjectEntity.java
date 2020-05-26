@@ -21,4 +21,52 @@ public class ProjectEntity{
     @OneToMany(mappedBy = "project")
     private List<IssueEntity> issues = new ArrayList<IssueEntity>();
     private String projectTypeKey;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getKeyP() {
+        return keyP;
+    }
+
+    public void setKeyP(String keyP) {
+        this.keyP = keyP;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<SprintEntity> getSprints() {
+        return sprints;
+    }
+
+    public void setSprints(List<SprintEntity> sprints) {
+        this.sprints = sprints;
+    }
+
+    public List<IssueEntity> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(List<IssueEntity> issues) {
+        this.issues = issues;
+    }
+
+    public String getProjectTypeKey() {
+        return projectTypeKey;
+    }
+
+    public void setProjectTypeKey(String projectTypeKey) {
+        this.projectTypeKey = projectTypeKey;
+    }
 }
