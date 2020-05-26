@@ -9,9 +9,9 @@ import javax.persistence.Table;
 @Table(name="Dashboard")
 public class DashboardEntity {
     @Id
-    public Long id;
-    public String name;
-    public String view;
+    private Long id;
+    private String name;
+    private String view;
 
     public Long getId() {
         return id;

@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dataServices.DashboardDataService;
 import com.example.demo.dataServices.IssueDataService;
 import com.example.demo.dataServices.IssueStatusDataService;
 import com.example.demo.dataServices.IssueTypeDataService;
@@ -77,5 +78,7 @@ public class DemoApplication {
 
     @Bean
     public UserDataService userDataService() { return new UserDataService(); }
+    @Bean
+    public DashboardDataService dashboardDataService() { return new DashboardDataService(); }
 
 }

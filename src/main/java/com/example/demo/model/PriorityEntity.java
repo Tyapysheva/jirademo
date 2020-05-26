@@ -13,7 +13,6 @@ public class PriorityEntity {
     @Id
     private Long id;
     @Column
-    private String self;
     private String name;
     @OneToMany(mappedBy = "priority")
     private List<IssueEntity> issues = new ArrayList<IssueEntity>();
@@ -24,14 +23,6 @@ public class PriorityEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getSelf() {
-        return self;
-    }
-
-    public void setSelf(String self) {
-        this.self = self;
     }
 
     public String getName() {

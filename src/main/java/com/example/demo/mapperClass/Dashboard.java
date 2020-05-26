@@ -1,7 +1,7 @@
 package com.example.demo.mapperClass;
 
 public class Dashboard {
-    public int id;
+    public Long id;
     public String name;
     public String view;
 

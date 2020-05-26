@@ -1,17 +1,21 @@
 package com.example.demo;
 
+import com.example.demo.dataServices.DashboardDataService;
 import com.example.demo.dataServices.IssueDataService;
 import com.example.demo.dataServices.IssueStatusDataService;
 import com.example.demo.dataServices.IssueTypeDataService;
 import com.example.demo.dataServices.PriorityDataService;
 import com.example.demo.dataServices.ProjectDataService;
 import com.example.demo.dataServices.UserDataService;
+import com.example.demo.mapperClass.Dashboard;
+import com.example.demo.model.DashboardEntity;
 import com.example.demo.model.IssueEntity;
 import com.example.demo.model.IssueStatusEntity;
 import com.example.demo.model.IssueTypeEntity;
 import com.example.demo.model.PriorityEntity;
 import com.example.demo.model.ProjectEntity;
 import com.example.demo.model.UserEntity;
+import com.example.demo.repositories.DashboardDAO;
 import com.example.demo.repositories.IssueDAO;
 import com.example.demo.repositories.IssueStatusDAO;
 import com.example.demo.repositories.IssueTypeDAO;
@@ -31,6 +35,7 @@ public class DataInit implements ApplicationRunner {
     private ProjectDAO projectDAO;
     private PriorityDAO priorityDAO;
     private UserDAO userDAO;
+    private DashboardDAO dashboardDAO;
 
     private IssueDataService issueDataService;
     private IssueTypeDataService issueTypeDataService;
@@ -38,25 +43,30 @@ public class DataInit implements ApplicationRunner {
     private ProjectDataService projectDataService;
     private PriorityDataService priorityDataService;
     private UserDataService userDataService;
+    private DashboardDataService dashboardDataService;
 
     @Autowired
-    public DataInit(IssueTypeDAO issueTypeDAO, IssueStatusDAO issueStatusDAO,UserDAO userDAO,
+    public DataInit(IssueTypeDAO issueTypeDAO, IssueStatusDAO issueStatusDAO,
+                    UserDAO userDAO,DashboardDAO dashboardDAO,
                     IssueDAO issueDAO,ProjectDAO projectDAO, PriorityDAO priorityDAO,
                     IssueDataService issueDataService,PriorityDataService priorityDataService,
                     IssueTypeDataService issueTypeDataService, IssueStatusDataService issueStatusDataService,
-                    ProjectDataService projectDataService,UserDataService userDataService) {
+                    ProjectDataService projectDataService,UserDataService userDataService,
+                    DashboardDataService dashboardDataService) {
         this.issueDAO = issueDAO;
         this.issueTypeDAO = issueTypeDAO;
         this.issueStatusDAO = issueStatusDAO;
         this.projectDAO = projectDAO;
         this.priorityDAO = priorityDAO;
         this.userDAO =userDAO;
+        this.dashboardDAO = dashboardDAO;
         this.issueDataService = issueDataService;
         this.issueTypeDataService = issueTypeDataService;
         this.issueStatusDataService = issueStatusDataService;
         this.projectDataService = projectDataService;
         this.priorityDataService = priorityDataService;
         this.userDataService = userDataService;
+        this.dashboardDataService = dashboardDataService;
 
     }
 
@@ -68,14 +78,16 @@ public class DataInit implements ApplicationRunner {
         Iterable<ProjectEntity> projects = projectDataService.getAll();
         Iterable<PriorityEntity> priorities = priorityDataService.getAll();
         Iterable<UserEntity> users = userDataService.getAll();
+        Iterable<DashboardEntity> dashboards = dashboardDataService.getAll();
 
         this.issueTypeDAO.saveAll(types);
         this.issueStatusDAO.saveAll(statuses);
         this.projectDAO.saveAll(projects);
         this.priorityDAO.saveAll(priorities);
+        this.dashboardDAO.saveAll(dashboards);
         this.userDAO.saveAll(users);
 
 
-        this.issueDAO.saveAll(issues);
+//        this.issueDAO.saveAll(issues);
     }
 }

@@ -12,19 +12,20 @@ import java.util.List;
 @Table(name="User")
 public class UserEntity {
     @Id
-    private Long id;
+    @Column(name = "Id")
+    private String accountId;
     private String displayName;
     private String accountType;
    // private ArrayList<ProjectEntity> projects;
     @OneToMany(mappedBy = "user")
     private List<IssueEntity> issues = new ArrayList<IssueEntity>();
 
-    public Long getId() {
-        return id;
+    public String getId() {
+        return accountId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getAccountType() {
