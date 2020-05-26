@@ -76,6 +76,6 @@ public class DataInit implements ApplicationRunner {
         this.userDAO.saveAll(users);
 
 
-//        this.issueDAO.saveAll(issues);
+        this.issueDAO.saveAll(issues);
     }
 }

@@ -13,8 +13,8 @@ import java.util.List;
 public class ProjectEntity{
     @Id
     private Long id;
-    @Column
-    private String keyP;
+    @Column(name = "keyP")
+    private String key;
     private String name;
     @OneToMany(mappedBy = "projectS")
     private List<SprintEntity> sprints = new ArrayList<SprintEntity>();
@@ -30,12 +30,12 @@ public class ProjectEntity{
         this.id = id;
     }
 
-    public String getKeyP() {
-        return keyP;
+    public String getKey() {
+        return key;
     }
 
-    public void setKeyP(String keyP) {
-        this.keyP = keyP;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {
