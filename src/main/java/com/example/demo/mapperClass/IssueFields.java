@@ -12,6 +12,8 @@ public class IssueFields {
     public Project project;
     public User assignee;
     public IssueStatus status;
+    public IssuePriority priority;
+    public String[] customfield_10020;
 //    public User reporter;
 
     @Override

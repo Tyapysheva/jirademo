@@ -2,12 +2,7 @@ package com.example.demo.model;
 
 import com.example.demo.mapperClass.IssueType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -22,21 +17,27 @@ public class IssueEntity {
     private Integer aggregatetimeoriginalestimate;
     private Integer timeestimate;
     private Integer timespent;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sprint_id")
     private SprintEntity sprint;
+
     @ManyToOne
     @JoinColumn(name = "userEntity_id")
     private UserEntity user;
+
     @ManyToOne
     @JoinColumn(name = "issueType_id")
     private IssueTypeEntity issueType;
+
     @ManyToOne
     @JoinColumn(name = "priority_id")
     private PriorityEntity priority;
+
     @ManyToOne
     @JoinColumn(name = "statusIssue_id")
     private IssueStatusEntity issueStatus;

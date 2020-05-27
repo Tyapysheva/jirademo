@@ -12,10 +12,9 @@ import java.util.List;
 public class PriorityEntity {
     @Id
     private Long id;
+
     @Column
     private String name;
-    @OneToMany(mappedBy = "priority")
-    private List<IssueEntity> issues = new ArrayList<IssueEntity>();
 
     public Long getId() {
         return id;
@@ -31,13 +30,5 @@ public class PriorityEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<IssueEntity> getIssues() {
-        return issues;
-    }
-
-    public void setIssues(List<IssueEntity> issues) {
-        this.issues = issues;
     }
 }

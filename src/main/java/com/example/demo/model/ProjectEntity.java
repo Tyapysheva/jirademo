@@ -1,11 +1,7 @@
 package com.example.demo.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.ArrayList;
+import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -13,13 +9,18 @@ import java.util.List;
 public class ProjectEntity{
     @Id
     private Long id;
+
     @Column(name = "keyP")
     private String key;
+
     private String name;
-    @OneToMany(mappedBy = "projectS")
-    private List<SprintEntity> sprints = new ArrayList<SprintEntity>();
-    @OneToMany(mappedBy = "project")
-    private List<IssueEntity> issues = new ArrayList<IssueEntity>();
+
+    @OneToMany(mappedBy = "projectS", fetch = FetchType.LAZY)
+    private Collection<SprintEntity> sprints;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private Collection<IssueEntity> issues;
+
     private String projectTypeKey;
 
     public Long getId() {
@@ -46,20 +47,12 @@ public class ProjectEntity{
         this.name = name;
     }
 
-    public List<SprintEntity> getSprints() {
+    public Iterable<SprintEntity> getSprints() {
         return sprints;
     }
 
-    public void setSprints(List<SprintEntity> sprints) {
-        this.sprints = sprints;
-    }
-
-    public List<IssueEntity> getIssues() {
+    public Iterable<IssueEntity> getIssues() {
         return issues;
-    }
-
-    public void setIssues(List<IssueEntity> issues) {
-        this.issues = issues;
     }
 
     public String getProjectTypeKey() {

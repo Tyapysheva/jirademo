@@ -17,6 +17,4 @@ public class IssueTypeEntity {
     private String description;
     private String name;
     private boolean subtask;
-    @OneToMany(mappedBy = "issueType")
-    private List<IssueEntity> issues;
 }

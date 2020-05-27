@@ -1,11 +1,8 @@
 package com.example.demo.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -17,8 +14,9 @@ public class UserEntity {
     private String displayName;
     private String accountType;
    // private ArrayList<ProjectEntity> projects;
-    @OneToMany(mappedBy = "user")
-    private List<IssueEntity> issues = new ArrayList<IssueEntity>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Collection<IssueEntity> issues;
 
     public String getId() {
         return accountId;
@@ -44,11 +42,7 @@ public class UserEntity {
         this.displayName = displayName;
     }
 
-    public List<IssueEntity> getIssues() {
+    public Iterable<IssueEntity> getIssues() {
         return issues;
-    }
-
-    public void setIssues(List<IssueEntity> issues) {
-        this.issues = issues;
     }
 }

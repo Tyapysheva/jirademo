@@ -1,13 +1,8 @@
 package com.example.demo.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import java.time.DateTimeException;
+import javax.persistence.*;
 import java.util.Date;
+
 @Entity
 @Table
 public class SprintEntity {
@@ -21,7 +16,8 @@ public class SprintEntity {
     private Date endDate;
     private Date completeDate;
     private Long sequence;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private ProjectEntity projectS;
 
@@ -95,5 +91,19 @@ public class SprintEntity {
 
     public void setProjectS(ProjectEntity projectS) {
         this.projectS = projectS;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!SprintEntity.class.isInstance(obj)) {
+            return false;
+        }
+        SprintEntity sprintEntity = SprintEntity.class.cast(obj);
+        return sprintEntity.id == this.id && sprintEntity.name.equals(this.name);
     }
 }

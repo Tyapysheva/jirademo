@@ -1,31 +1,16 @@
 package com.example.demo;
 
-import com.example.demo.dataServices.DashboardDataService;
-import com.example.demo.dataServices.IssueDataService;
-import com.example.demo.dataServices.IssueStatusDataService;
-import com.example.demo.dataServices.IssueTypeDataService;
-import com.example.demo.dataServices.PriorityDataService;
-import com.example.demo.dataServices.ProjectDataService;
-import com.example.demo.dataServices.UserDataService;
-import com.example.demo.mapperClass.Dashboard;
-import com.example.demo.model.DashboardEntity;
-import com.example.demo.model.IssueEntity;
-import com.example.demo.model.IssueStatusEntity;
-import com.example.demo.model.IssueTypeEntity;
-import com.example.demo.model.PriorityEntity;
-import com.example.demo.model.ProjectEntity;
-import com.example.demo.model.UserEntity;
-import com.example.demo.repositories.DashboardDAO;
-import com.example.demo.repositories.IssueDAO;
-import com.example.demo.repositories.IssueStatusDAO;
-import com.example.demo.repositories.IssueTypeDAO;
-import com.example.demo.repositories.PriorityDAO;
-import com.example.demo.repositories.ProjectDAO;
-import com.example.demo.repositories.UserDAO;
+import com.example.demo.dataServices.*;
+import com.example.demo.model.*;
+import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Component
 public class DataInit implements ApplicationRunner {
@@ -36,6 +21,7 @@ public class DataInit implements ApplicationRunner {
     private PriorityDAO priorityDAO;
     private UserDAO userDAO;
     private DashboardDAO dashboardDAO;
+    private SprintDAO sprintDAO;
 
     private IssueDataService issueDataService;
     private IssueTypeDataService issueTypeDataService;
@@ -52,14 +38,16 @@ public class DataInit implements ApplicationRunner {
                     IssueDataService issueDataService,PriorityDataService priorityDataService,
                     IssueTypeDataService issueTypeDataService, IssueStatusDataService issueStatusDataService,
                     ProjectDataService projectDataService,UserDataService userDataService,
-                    DashboardDataService dashboardDataService) {
+                    DashboardDataService dashboardDataService, SprintDAO sprintDAO) {
         this.issueDAO = issueDAO;
         this.issueTypeDAO = issueTypeDAO;
         this.issueStatusDAO = issueStatusDAO;
         this.projectDAO = projectDAO;
         this.priorityDAO = priorityDAO;
-        this.userDAO =userDAO;
+        this.userDAO = userDAO;
         this.dashboardDAO = dashboardDAO;
+        this.sprintDAO = sprintDAO;
+
         this.issueDataService = issueDataService;
         this.issueTypeDataService = issueTypeDataService;
         this.issueStatusDataService = issueStatusDataService;
@@ -67,7 +55,6 @@ public class DataInit implements ApplicationRunner {
         this.priorityDataService = priorityDataService;
         this.userDataService = userDataService;
         this.dashboardDataService = dashboardDataService;
-
     }
 
     @Override
@@ -80,14 +67,19 @@ public class DataInit implements ApplicationRunner {
         Iterable<UserEntity> users = userDataService.getAll();
         Iterable<DashboardEntity> dashboards = dashboardDataService.getAll();
 
+        List<SprintEntity> sprints = StreamSupport.stream(issues.spliterator(), false)
+                .map(x -> x.getSprint())
+                .distinct()
+                .collect(Collectors.toList());
+
         this.issueTypeDAO.saveAll(types);
         this.issueStatusDAO.saveAll(statuses);
         this.projectDAO.saveAll(projects);
         this.priorityDAO.saveAll(priorities);
         this.dashboardDAO.saveAll(dashboards);
         this.userDAO.saveAll(users);
+        this.sprintDAO.saveAll(sprints);
 
-
-//        this.issueDAO.saveAll(issues);
+        this.issueDAO.saveAll(issues);
     }
 }

@@ -71,14 +71,23 @@ public class DemoApplication {
     }
 
     @Bean
-    public ProjectDataService projectDataService() { return new ProjectDataService(); }
+    public ProjectDataService projectDataService() {
+        return new ProjectDataService();
+    }
 
     @Bean
-    public PriorityDataService priorityDataService() { return new PriorityDataService(); }
+    public PriorityDataService priorityDataService() {
+        return new PriorityDataService();
+    }
 
     @Bean
-    public UserDataService userDataService() { return new UserDataService(); }
+    public UserDataService userDataService() {
+        return new UserDataService();
+    }
+
     @Bean
-    public DashboardDataService dashboardDataService() { return new DashboardDataService(); }
+    public DashboardDataService dashboardDataService() {
+        return new DashboardDataService();
+    }
 
 }
