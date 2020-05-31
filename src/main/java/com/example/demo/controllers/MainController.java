@@ -9,9 +9,12 @@ import com.example.demo.repositories.IssueStatusDAO;
 import com.example.demo.repositories.IssueTypeDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@RequestMapping("")
 @Controller
 public class MainController {
     @Autowired
@@ -27,9 +30,11 @@ public class MainController {
     private IssueDataService issueDataService;
 
     @ResponseBody
-    @RequestMapping("/")
-    public String index() {
-        return "123";
+    @GetMapping("/")
+    public String index(Model m) {
+        Iterable<IssueEntity> entities = issueDAO.findAll();
+        m.addAttribute("issues", entities);
+        return "index";
     }
 
     @ResponseBody

@@ -16,6 +16,8 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
@@ -81,13 +83,20 @@ public class DemoApplication {
     }
 
     @Bean
-    public UserDataService userDataService() {
-        return new UserDataService();
-    }
+    public UserDataService userDataService() { return new UserDataService(); }
 
     @Bean
     public DashboardDataService dashboardDataService() {
         return new DashboardDataService();
     }
 
+
+    @Bean
+    public InternalResourceViewResolver jspViewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/views");
+        viewResolver.setSuffix(".jsp");
+        viewResolver.setOrder(1);
+        return viewResolver;
+    }
 }
