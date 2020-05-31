@@ -61,7 +61,7 @@
                             <tbody>
                             <th:block th:each="issue : ${issues}">
                                 <tr>
-                                    <td th:text="${issue.getKeyIs()}"></td>
+                                    <td th:text="${issue.getKey()}"></td>
                                     <td th:text="${issue.issueType.getName()}"></td>
                                     <td th:text="${issue.user.getDisplayName()}"></td>
                                     <td th:text="${issue.sprint.getName()}"></td>
@@ -90,12 +90,7 @@
 <!--                                <span class="mdl-radio__label">Search books by a Author's name</span>-->
 <!--                            </label>-->
 <!--                        </div>-->
-
-
-
-                    <div class="pagination">
-                        ;ХЪ
-                    </div>
+                    
                 </section>
             </div>
         </main>

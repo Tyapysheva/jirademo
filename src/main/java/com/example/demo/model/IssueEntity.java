@@ -10,8 +10,8 @@ import java.util.Date;
 public class IssueEntity {
     @Id
     private Long id;
-    @Column
-    private String keyIs;
+    @Column(name = "keyIs")
+    private String key;
     private Date created;
     @Column(name = "aggregate")
     private Integer aggregatetimeoriginalestimate;
@@ -50,12 +50,12 @@ public class IssueEntity {
         this.id = id;
     }
 
-    public String getKeyIs() {
-        return keyIs;
+    public String getKey() {
+        return key;
     }
 
-    public void setKeyIs(String keyIs) {
-        this.keyIs = keyIs;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public Date getCreated() {
