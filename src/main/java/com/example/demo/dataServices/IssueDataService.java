@@ -20,7 +20,8 @@ public class IssueDataService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+    private final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static String username = "onelovezenit@gmail.com";
     private static String token = "dw2Xw44FxbRiDXvpbs4NBFFD";
 
@@ -55,6 +56,11 @@ public class IssueDataService {
         issueEntity.setUser(modelMapper.map(issue.fields.assignee, UserEntity.class));
         issueEntity.setPriority(modelMapper.map(issue.fields.priority, PriorityEntity.class));
 
+        Optional<Date> dueDate = this.parseDate(issue.fields.duedate);
+        if (dueDate.isPresent()) {
+            issueEntity.setDueDate(dueDate.get());
+        }
+
         Optional<String> sprintData = Arrays.stream(issue.fields.customfield_10020)
                 .filter(x->x.contains("service.sprint.Sprint"))
                 .findFirst();
@@ -73,7 +79,7 @@ public class IssueDataService {
         Map<String, String> data = Arrays.asList(field.substring(field.indexOf('[') + 1, field.indexOf(']')).split(","))
                 .stream()
                 .map(x -> x.split("="))
-                .collect(Collectors.toMap(x -> x[0], x -> x[1]));
+                .collect(Collectors.toMap(x -> x[0], x -> x.length > 1 ? x[1] : ""));
 
         Optional<Date> startDate = this.parseDate(data.get("startDate"));
         Optional<Date> endDate = this.parseDate(data.get("endDate"));
@@ -95,10 +101,14 @@ public class IssueDataService {
 
     private Optional<Date> parseDate(String input) {
         Optional<Date> result = Optional.empty();
-        if (!input.equals("<null>")) {
+        if (input != null && !input.isEmpty() && !input.equals("<null>")) {
             try {
-                result = Optional.of(df.parse(input));
+                result = Optional.of(dateTimeFormat.parse(input));
             } catch (ParseException e) {
+                try {
+                    result = Optional.of(dateFormat.parse(input));
+                } catch (ParseException ex) {
+                }
             }
         }
         return result;

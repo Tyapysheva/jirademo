@@ -14,6 +14,7 @@ public class IssueFields {
     public IssueStatus status;
     public IssuePriority priority;
     public String[] customfield_10020;
+    public String duedate;
 //    public User reporter;
 
     @Override

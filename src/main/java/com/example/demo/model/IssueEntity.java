@@ -42,12 +42,22 @@ public class IssueEntity {
     @JoinColumn(name = "statusIssue_id")
     private IssueStatusEntity issueStatus;
 
+    private Date dueDate;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 
     public String getKey() {
