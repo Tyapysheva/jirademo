@@ -91,12 +91,12 @@ public class DemoApplication {
     }
 
 
-    @Bean
-    public InternalResourceViewResolver jspViewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/views");
-        viewResolver.setSuffix(".jsp");
-        viewResolver.setOrder(1);
-        return viewResolver;
-    }
+//    @Bean
+//    public InternalResourceViewResolver jspViewResolver() {
+//        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+//        viewResolver.setPrefix("/WEB-INF/views");
+//        viewResolver.setSuffix(".jsp");
+//        viewResolver.setOrder(1);
+//        return viewResolver;
+//    }
 }
