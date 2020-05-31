@@ -1,3 +1,93 @@
+.layout {
+    background: url('/img/background.png') center;
+    background-size: cover;
+    height: 100%;
+}
+
+.main.mdl-layout__content {
+    padding: 100px;
+}
+
+.mdl-layout {
+    align-items: center;
+    justify-content: center;
+}
+
+.mdl-layout__content {
+    padding: 24px;
+}
+
+.layout .mdl-layout__header,
+.layout .mdl-layout__drawer-button {
+    color: #604D42;
+    background-clip: border-box;
+    filter: invert(1) grayscale(1);
+}
+
+.layout nav .mdl-menu__item > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+section.card-block {
+    background-image: linear-gradient(to bottom right, #fff, #CCC3A4);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+section.card-block.description {
+    min-width: 700px;
+}
+
+section.card-block > .section-header {
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-rows: 1fr;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+    justify-items: center;
+    align-items: center;
+}
+
+section.card-block .caption {
+    line-height: 24px;
+}
+
+section.card-block .backLink > span {
+    font-size: 20px;
+    color: #777673;
+    padding-left: 5px;
+}
+
+.search-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(5, 1fr);
+    height: 230px;
+    min-width: 360px;
+}
+
+.search-block .search-bar > .mdl-textfield {
+    max-width: 280px;
+}
+
+.sort-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    height: 150px;
+}
+
+footer {
+    background: linear-gradient(to right, #130B07, #2B1C07);
+}
+
+.layout .mdl-layout__header-row .mdl-navigation__link,
+.mdl-mini-footer {
+    color: #604D42;
+}
+
 .form {
     background-color: #efefef;
     width: 400px;

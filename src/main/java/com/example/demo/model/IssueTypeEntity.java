@@ -13,8 +13,39 @@ import java.util.List;
 public class IssueTypeEntity {
     @Id
     private Long id;
-    @Column
     private String description;
     private String name;
     private boolean subtask;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isSubtask() {
+        return subtask;
+    }
+
+    public void setSubtask(boolean subtask) {
+        this.subtask = subtask;
+    }
 }

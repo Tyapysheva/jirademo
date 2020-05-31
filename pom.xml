@@ -94,30 +94,13 @@
             <version>2.3.7</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>javax</groupId>-->
-<!--            <artifactId>javaee-api</artifactId>-->
-<!--            <version>${jee.version}</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.5.1</version>
+        </dependency>
 
-
-<!--        &lt;!&ndash; Tomcat Embed &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-tomcat</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; To compile JSP files &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.tomcat.embed</groupId>-->
-<!--            <artifactId>tomcat-embed-jasper</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; JSTL &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>javax.servlet</groupId>-->
-<!--            <artifactId>jstl</artifactId>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Загрузка сотрудников в JIRA</title>
+
+    <link rel="stylesheet" th:href="@{/external/mdl-v1.1.2/material.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+    <div class="layout mdl-layout mdl-js-layout">
+        <header class="mdl-layout__header mdl-layout__header--transparent">
+            <div class="mdl-layout__header-row">
+                <span>Jira</span>
+
+                <div class="mdl-layout-spacer"></div>
+
+                <nav class="mdl-navigation">
+                    <a href="#">Проекты</a>
+                    <a href="#">Спринты</a>
+                    <a href="#">Сотрудники</a>
+                </nav>
+            </div>
+        </header>
+
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">Jira</span>
+            <nav class="mdl-navigation">
+                <a href="#">Проекты</a>
+                <a href="#">Спринты</a>
+                <a href="#">Сотрудники</a>
+                <a th:href="@{/greetings}">Проверка</a>
+            </nav>
+        </div>
+
+        <main class="mdl-layout__content">
+            <div class="mdl-grid">
+<!--                    Нечто новое. Были загружены данное о <div th:text="${issueCount}" />-->
+
+                <section class="card-block mdl-shadow--2dp mdl-cell mdl-cell--11-col-desktop mdl-cell--11-col-tablet mdl-cell--12-col-phone">
+                    <div class="section-header">
+                        <i class="material-icons mdl-list__item-icon">library_books</i>
+                        <h4 class="caption">Задачи:</h4>
+                        <div></div>
+                    </div>
+
+                    <div class="data-block">
+                        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                            <thead>
+                            <tr>
+                                <th class="mdl-data-table__cell--non-numeric">Ключ</th>
+                                <th class="mdl-data-table__cell--non-numeric">Тип задачи</th>
+                                <th class="mdl-data-table__cell--non-numeric">Исполнитель</th>
+                                <th>Спринт</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="issue : ${issues}">
+                                <tr>
+                                    <td th:text="${issue.getKeyIs()}"></td>
+                                    <td th:text="${issue.issueType.getName()}"></td>
+                                    <td th:text="${issue.user.getDisplayName()}"></td>
+                                    <td th:text="${issue.sprint.getName()}"></td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                        </table>
+                    </div>
+
+<!--                        <div class="search-block">-->
+<!--                            <div class="search-bar">-->
+<!--                                <div class="mdl-textfield mdl-js-textfield">-->
+<!--                                    <input class="mdl-textfield__input" type="text" id="search-expandable" placeholder="Enter search query">-->
+<!--                                </div>-->
+<!--                                <button class="mdl-button mdl-js-button mdl-button&#45;&#45;fab mdl-button&#45;&#45;colored">-->
+<!--                                    <i class="material-icons">search</i>-->
+<!--                                </button>-->
+<!--                            </div>-->
+
+<!--                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="criteria_1">-->
+<!--                                <input checked class="mdl-radio__button" id="criteria_1" name="criteria" type="radio" value="PublicationsByName">-->
+<!--                                <span class="mdl-radio__label">Search by publication name</span>-->
+<!--                            </label>-->
+<!--                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="criteria_2">-->
+<!--                                <input class="mdl-radio__button" id="criteria_2" name="criteria" type="radio" value="BooksByAuthor">-->
+<!--                                <span class="mdl-radio__label">Search books by a Author's name</span>-->
+<!--                            </label>-->
+<!--                        </div>-->
+
+
+
+                    <div class="pagination">
+                        ;ХЪ
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="mdl-mini-footer">
+            <div class="mdl-mini-footer--left-section">
+                <div class="mdl-logo">
+                    <span>&copy;</span>
+                    <span>2020 Анализ нагрузки сотрудников</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+<!--    <script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>-->
+    <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery-slim.js}"></script>
+</body>
+</html>

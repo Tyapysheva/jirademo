@@ -2,17 +2,13 @@ package com.example.demo.controllers;
 
 import com.example.demo.dataServices.IssueDataService;
 import com.example.demo.model.IssueEntity;
-import com.example.demo.model.IssueStatusEntity;
-import com.example.demo.model.IssueTypeEntity;
 import com.example.demo.repositories.IssueDAO;
-import com.example.demo.repositories.IssueStatusDAO;
-import com.example.demo.repositories.IssueTypeDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Collection;
 
 @Controller
 public class MainController {
@@ -22,29 +18,14 @@ public class MainController {
     public MainController(IssueDAO issueDAO) {
         this.issueDAO = issueDAO;
     }
-//
-//    @Autowired
-//    private IssueTypeDAO issueTypeDAO;
-//
-//    @Autowired
-//    private IssueStatusDAO issueStatusDAO;
-//
-//    @Autowired
-//    private IssueDataService issueDataService;
 
     @GetMapping("/")
     public String index(Model m) {
         Iterable<IssueEntity> entities = issueDAO.findAll();
         m.addAttribute("issues", entities);
+        m.addAttribute("issueCount", ((Collection<?>)entities).size());
         return "index";
     }
-
-    @PostMapping("/hello")
-    public String sayHello(@RequestParam("name") String name, Model m) {
-        m.addAttribute("name", name);
-        return "hello";
-    }
-
 
 //    @ResponseBody
 //    @RequestMapping("/issues")
