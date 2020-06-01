@@ -20,9 +20,8 @@
                 <div class="mdl-layout-spacer"></div>
 
                 <nav class="mdl-navigation">
-                    <a href="#">Проекты</a>
-                    <a href="#">Спринты</a>
-                    <a href="#">Сотрудники</a>
+                    <a th:href="@{/index}">Нагрузка</a>
+                    <a th:href="@{/issues}">Задачи</a>
                 </nav>
             </div>
         </header>
@@ -30,17 +29,13 @@
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">Jira</span>
             <nav class="mdl-navigation">
-                <a href="#">Проекты</a>
-                <a href="#">Спринты</a>
-                <a href="#">Сотрудники</a>
-<!--                <a th:href="@{/greetings}">Проверка</a>-->
+                <a th:href="@{/index}">Нагрузка</a>
+                <a th:href="@{/issues}">Задачи</a>
             </nav>
         </div>
 
         <main class="mdl-layout__content">
             <div class="mdl-grid">
-<!--                    Нечто новое. Были загружены данное о <div th:text="${issueCount}" />-->
-
                 <section class="card-block mdl-shadow--2dp mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                     <div class="section-header">
                         <i class="material-icons mdl-list__item-icon">library_books</i>

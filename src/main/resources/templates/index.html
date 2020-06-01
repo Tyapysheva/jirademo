@@ -20,9 +20,8 @@
                 <div class="mdl-layout-spacer"></div>
 
                 <nav class="mdl-navigation">
-                    <a href="#">Проекты</a>
-                    <a href="#">Спринты</a>
-                    <a href="#">Сотрудники</a>
+                    <a th:href="@{/index}">Нагрузка</a>
+                    <a th:href="@{/issues}">Задачи</a>
                 </nav>
             </div>
         </header>
@@ -30,17 +29,13 @@
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">Jira</span>
             <nav class="mdl-navigation">
-                <a href="#">Проекты</a>
-                <a href="#">Спринты</a>
-                <a href="#">Сотрудники</a>
-<!--                <a th:href="@{/greetings}">Проверка</a>-->
+                <a th:href="@{/index}">Нагрузка</a>
+                <a th:href="@{/issues}">Задачи</a>
             </nav>
         </div>
 
         <main class="mdl-layout__content">
             <div class="mdl-grid">
-<!--                    Нечто новое. Были загружены данное о <div th:text="${issueCount}" />-->
-
                 <section class="card-block mdl-shadow--2dp mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
                     <div class="section-header">
                         <i class="material-icons mdl-list__item-icon">library_books</i>
@@ -52,45 +47,25 @@
                         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                             <thead>
                             <tr>
-                                <th class="mdl-data-table__cell--non-numeric">Ключ</th>
-                                <th class="mdl-data-table__cell--non-numeric">Тип задачи</th>
-                                <th class="mdl-data-table__cell--non-numeric">Исполнитель</th>
-                                <th>Спринт</th>
+                                <th class="mdl-data-table__cell--non-numeric"></th>
+                                <th:block th:each="day : ${days}">
+                                    <th class="mdl-data-table__cell--non-numeric" th:text="${day}"></th>
+                                </th:block>
                             </tr>
                             </thead>
                             <tbody>
-                            <th:block th:each="issue : ${issues}">
-                                <tr>
-                                    <td th:text="${issue.getKey()}"></td>
-                                    <td th:text="${issue.issueType.getName()}"></td>
-                                    <td th:text="${issue.user.getDisplayName()}"></td>
-                                    <td th:text="${issue.sprint.getName()}"></td>
-                                </tr>
-                            </th:block>
+<!--                            <th:block th:each="userLoad : ${userLoads}">-->
+<!--                                <tr>-->
+<!--                                    <td th:text="${userLoad.userName}"></td>-->
+<!--                                    <th:block th:each="key : ${userLoad.load.keySet()}">-->
+<!--                                        <td th:class="${userLoad.load[key]} > 1 ? 'overload': ''" th:text="${userLoad.load[key] * 100}" %></td>-->
+<!--                                    </th:block>-->
+<!--                                </tr>-->
+<!--                            </th:block>-->
                             </tbody>
                         </table>
                     </div>
 
-<!--                        <div class="search-block">-->
-<!--                            <div class="search-bar">-->
-<!--                                <div class="mdl-textfield mdl-js-textfield">-->
-<!--                                    <input class="mdl-textfield__input" type="text" id="search-expandable" placeholder="Enter search query">-->
-<!--                                </div>-->
-<!--                                <button class="mdl-button mdl-js-button mdl-button&#45;&#45;fab mdl-button&#45;&#45;colored">-->
-<!--                                    <i class="material-icons">search</i>-->
-<!--                                </button>-->
-<!--                            </div>-->
-
-<!--                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="criteria_1">-->
-<!--                                <input checked class="mdl-radio__button" id="criteria_1" name="criteria" type="radio" value="PublicationsByName">-->
-<!--                                <span class="mdl-radio__label">Search by publication name</span>-->
-<!--                            </label>-->
-<!--                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="criteria_2">-->
-<!--                                <input class="mdl-radio__button" id="criteria_2" name="criteria" type="radio" value="BooksByAuthor">-->
-<!--                                <span class="mdl-radio__label">Search books by a Author's name</span>-->
-<!--                            </label>-->
-<!--                        </div>-->
-                    
                 </section>
             </div>
         </main>
@@ -104,7 +79,6 @@
             </div>
         </footer>
     </div>
-<!--    <script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>-->
     <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery-slim.js}"></script>
 </body>
 </html>
