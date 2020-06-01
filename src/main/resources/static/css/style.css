@@ -80,11 +80,11 @@ section.card-block .backLink > span {
 }
 
 footer {
+    background-color: transparent;
 }
 
 .layout .mdl-layout__header-row .mdl-navigation__link,
 .mdl-mini-footer {
-    /*color: #604D42;*/
 }
 
 .mdl-layout__header-row > .mdl-navigation a {
