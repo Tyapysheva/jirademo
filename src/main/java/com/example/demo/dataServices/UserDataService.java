@@ -111,6 +111,7 @@ public class UserDataService {
 
             loadData.addLoad(currentDate.format(dateFormat), currentLoad);
             userLoads.add(loadData);
+            currentDate = currentLocalDate;
         }
         days.sort(Comparator.naturalOrder());
 
