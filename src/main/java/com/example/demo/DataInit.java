@@ -61,11 +61,13 @@ public class DataInit implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         Iterable<IssueTypeEntity> types = issueTypeDataService.getAll();
         Iterable<IssueStatusEntity> statuses = issueStatusDataService.getAll();
-        Iterable<IssueEntity> issues = issueDataService.getAll();
         Iterable<ProjectEntity> projects = projectDataService.getAll();
         Iterable<PriorityEntity> priorities = priorityDataService.getAll();
         Iterable<UserEntity> users = userDataService.getAll();
         Iterable<DashboardEntity> dashboards = dashboardDataService.getAll();
+
+        List<String> projectKeys = StreamSupport.stream(projects.spliterator(), false).map(p -> p.getKey()).collect(Collectors.toList());
+        Iterable<IssueEntity> issues = issueDataService.getAll(projectKeys);
 
         List<SprintEntity> sprints = StreamSupport.stream(issues.spliterator(), false)
                 .map(x -> x.getSprint())

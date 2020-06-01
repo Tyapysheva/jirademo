@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.dataServices.IssueDataService;
 import com.example.demo.model.IssueEntity;
 import com.example.demo.repositories.IssueDAO;
+import com.example.demo.repositories.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +14,10 @@ import java.util.Collection;
 @Controller
 public class MainController {
     private IssueDAO issueDAO;
+    private UserDAO userDAO;
 
     @Autowired
-    public MainController(IssueDAO issueDAO) {
+    public MainController(IssueDAO issueDAO, UserDAO userDAO) {
         this.issueDAO = issueDAO;
     }
 
@@ -25,6 +27,14 @@ public class MainController {
         m.addAttribute("issues", entities);
         m.addAttribute("issueCount", ((Collection<?>)entities).size());
         return "index";
+    }
+
+    @GetMapping("/issues")
+    public String issues(Model m) {
+        Iterable<IssueEntity> entities = issueDAO.findAll();
+        m.addAttribute("issues", entities);
+        m.addAttribute("issueCount", ((Collection<?>)entities).size());
+        return "issues";
     }
 
 //    @ResponseBody

@@ -2,12 +2,14 @@ package com.example.demo.dataServices;
 
 import com.example.demo.mapperClass.Issue;
 import com.example.demo.mapperClass.IssueResponse;
+import com.example.demo.mapperClass.Project;
 import com.example.demo.model.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.util.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.DateFormat;
@@ -19,17 +21,44 @@ import java.util.stream.Collectors;
 public class IssueDataService {
     @Autowired
     private ModelMapper modelMapper;
+    private final Integer pageStart = 0;
+    private final Integer pageSize = 50;
 
     private final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+    private final DateFormat dateTimeFormatVariant = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ");
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static String username = "onelovezenit@gmail.com";
     private static String token = "dw2Xw44FxbRiDXvpbs4NBFFD";
 
-    public Iterable<IssueEntity> getAll() {
-        HttpResponse<IssueResponse> response = null;
+    public Iterable<IssueEntity> getAll(Iterable<String> projectKeys) {
         List<IssueEntity> result = new ArrayList<>();
+        if (projectKeys != null && ((Collection<?>)projectKeys).size() > 0)
+        {
+            for(String k : projectKeys) {
+                Integer startAt = pageStart - pageSize;
+                IssueResponse issueResponse;
+                do {
+                    startAt += pageSize;
+                    issueResponse = this.find(k, startAt, pageSize);
+                    if (issueResponse != null && issueResponse.issues != null) {
+                        List<IssueEntity> buffer = issueResponse.issues.stream()
+                                .map(this::convertToEntity)
+                                .collect(Collectors.toList());
+                        result.addAll(buffer);
+                    }
+                }
+                while(issueResponse != null && issueResponse.total > startAt + pageSize);
+            };
+        }
+        return result;
+    }
+
+    private IssueResponse find(String project, Integer startAt, Integer maxResult) {
+        HttpResponse<IssueResponse> response = null;
+        IssueResponse result = null;
+        String request = String.format("https://tyapysheva.atlassian.net/rest/api/2/search?jql=project=%s&startAt=%d&maxResults=%d", project, startAt, maxResult);
         try {
-            response = Unirest.get("https://tyapysheva.atlassian.net/rest/api/2/search?jql=project=HUQG&maxResults=50")
+            response = Unirest.get(request)
                     .basicAuth(username, token)
                     .header("Accept", "application/json")
                     .asObject(IssueResponse.class);
@@ -38,10 +67,7 @@ public class IssueDataService {
         }
 
         if (response.getStatus() == HttpStatus.SC_OK) {
-            IssueResponse body = response.getBody();
-            result = body.issues.stream()
-                    .map(this::convertToEntity)
-                    .collect(Collectors.toList());
+            result = response.getBody();
         }
         return result;
     }
@@ -50,11 +76,17 @@ public class IssueDataService {
         IssueEntity issueEntity = modelMapper.map(issue, IssueEntity.class);
         issueEntity.setAggregatetimeoriginalestimate(issue.fields.aggregatetimeoriginalestimate);
         issueEntity.setTimespent(issue.fields.timespent);
+        issueEntity.setTimeestimate(issue.fields.timeestimate);
         issueEntity.setIssueType(modelMapper.map(issue.fields.issuetype, IssueTypeEntity.class));
         issueEntity.setIssueStatus(modelMapper.map(issue.fields.status, IssueStatusEntity.class));
         issueEntity.setProject(modelMapper.map(issue.fields.project, ProjectEntity.class));
         issueEntity.setUser(modelMapper.map(issue.fields.assignee, UserEntity.class));
         issueEntity.setPriority(modelMapper.map(issue.fields.priority, PriorityEntity.class));
+
+        Optional<Date> createdDate = this.parseDate(issue.fields.created);
+        if (createdDate.isPresent()) {
+            issueEntity.setCreated(createdDate.get());
+        }
 
         Optional<Date> dueDate = this.parseDate(issue.fields.duedate);
         if (dueDate.isPresent()) {
@@ -101,14 +133,23 @@ public class IssueDataService {
 
     private Optional<Date> parseDate(String input) {
         Optional<Date> result = Optional.empty();
+        result = this.parseDate(dateTimeFormat, input);
+        if (!result.isPresent()) {
+            result = this.parseDate(dateTimeFormatVariant, input);
+
+            if (!result.isPresent()) {
+                result = this.parseDate(dateFormat, input);
+            }
+        }
+        return result;
+    }
+
+    private Optional<Date> parseDate(DateFormat formatter, String input) {
+        Optional<Date> result = Optional.empty();
         if (input != null && !input.isEmpty() && !input.equals("<null>")) {
             try {
-                result = Optional.of(dateTimeFormat.parse(input));
+                result = Optional.of(formatter.parse(input));
             } catch (ParseException e) {
-                try {
-                    result = Optional.of(dateFormat.parse(input));
-                } catch (ParseException ex) {
-                }
             }
         }
         return result;
