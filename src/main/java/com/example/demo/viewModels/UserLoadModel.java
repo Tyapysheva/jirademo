@@ -15,4 +15,14 @@ public class UserLoadModel {
     public void addLoad(String day, double load) {
         this.load.put(day, load);
     }
+
+    public String getLoad(String day) {
+        Double defaultLoad = (double)0;
+        double load = 0;
+        try {
+            load = this.load.getOrDefault(day, defaultLoad);
+        } catch (Exception e) {
+        }
+        return String.format("%4.3f %%", load * 100);
+    }
 }
