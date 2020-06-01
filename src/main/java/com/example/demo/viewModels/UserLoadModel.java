@@ -9,6 +9,7 @@ public class UserLoadModel {
     public UserLoadModel(String userName) {
         this.userName = userName;
         this.load = new HashMap<String, Double>();
+
     }
 
     public void addLoad(String day, double load) {

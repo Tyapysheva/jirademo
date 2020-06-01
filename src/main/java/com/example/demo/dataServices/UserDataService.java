@@ -25,7 +25,7 @@ public class UserDataService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM'\n'E");
+    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM E");
     private final Integer secondsInHour = 3600;
 
     private static String username = "onelovezenit@gmail.com";
@@ -113,6 +113,15 @@ public class UserDataService {
             userLoads.add(loadData);
         }
         days.sort(Comparator.naturalOrder());
+
+        for (UserLoadModel userLoad : userLoads) {
+            for (String day : days) {
+                if (!userLoad.load.containsKey(day)) {
+                    userLoad.addLoad(day, 0);
+                }
+            }
+        }
+
         return new UserLoadViewModel(userLoads, days) ;
     }
 

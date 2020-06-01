@@ -29,7 +29,7 @@
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">Jira</span>
             <nav class="mdl-navigation">
-                <a th:href="@{/index}">Нагрузка</a>
+                <a th:href="@{/}">Нагрузка</a>
                 <a th:href="@{/issues}">Задачи</a>
             </nav>
         </div>
@@ -54,14 +54,17 @@
                             </tr>
                             </thead>
                             <tbody>
-<!--                            <th:block th:each="userLoad : ${userLoads}">-->
-<!--                                <tr>-->
-<!--                                    <td th:text="${userLoad.userName}"></td>-->
-<!--                                    <th:block th:each="key : ${userLoad.load.keySet()}">-->
-<!--                                        <td th:class="${userLoad.load[key]} > 1 ? 'overload': ''" th:text="${userLoad.load[key] * 100}" %></td>-->
-<!--                                    </th:block>-->
-<!--                                </tr>-->
-<!--                            </th:block>-->
+                                <th:block th:each="userLoad : ${userLoads}">
+                                    <tr>
+                                        <td th:text="${userLoad.userName}"></td>
+                                        <th:block th:each="day : ${days}">
+                                            <th class="mdl-data-table__cell" th:text="${userLoad.load[day]} %"></th>
+                                        </th:block>
+<!--                                        <th:block th:each="key : ${userLoad.load.keySet()}">-->
+<!--                                            <td th:class="${userLoad.load[key]} > 1 ? 'overload': ''" th:text="${userLoad.load[key] * 100}" %></td>-->
+<!--                                        </th:block>-->
+                                    </tr>
+                                </th:block>
                             </tbody>
                         </table>
                     </div>
