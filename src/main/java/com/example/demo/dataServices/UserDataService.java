@@ -78,7 +78,8 @@ public class UserDataService {
                     List<Number[]> choiceCoefficients = futureIssues
                             .stream().map(x -> {
                                 Date deadlineDate = x.getDueDate() != null ? x.getDueDate() : x.getSprint().getEndDate();
-                                double k = Period.between(LocalDate.from(deadlineDate.toInstant()), currentLocalDate).getDays();   // currentDate / currentLocalDate проблема с final
+                                ZonedDateTime deadlineDateTime = ZonedDateTime.ofInstant(deadlineDate.toInstant(), ZoneId.systemDefault());
+                                double k = Period.between(deadlineDateTime.toLocalDate(), currentLocalDate).getDays();   // currentDate / currentLocalDate проблема с final
                                 Number[] res = {futureIssues.indexOf(x), k / x.getPriority().getId()};
                                 return res;
                             }).collect(Collectors.toList());

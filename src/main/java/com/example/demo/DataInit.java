@@ -59,6 +59,10 @@ public class DataInit implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        loadData();
+    }
+
+    public void loadData() {
         Iterable<IssueTypeEntity> types = issueTypeDataService.getAll();
         Iterable<IssueStatusEntity> statuses = issueStatusDataService.getAll();
         Iterable<ProjectEntity> projects = projectDataService.getAll();

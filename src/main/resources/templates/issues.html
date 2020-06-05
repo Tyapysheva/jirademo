@@ -40,7 +40,11 @@
                     <div class="section-header">
                         <i class="material-icons mdl-list__item-icon">library_books</i>
                         <h4 class="caption">Задачи:</h4>
-                        <div></div>
+                        <form method="POST" th:action="@{/refresh/(returnUrl=${'/issues'})}">
+                            <button type="submit" name="submit">
+                                <i class="material-icons mdl-list__item-icon">refresh</i>
+                            </button>
+                        </form>
                     </div>
 
                     <div class="data-block">

@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.DataInit;
 import com.example.demo.dataServices.IssueDataService;
 import com.example.demo.dataServices.UserDataService;
 import com.example.demo.model.IssueEntity;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 import java.util.stream.StreamSupport;
@@ -21,12 +23,15 @@ public class MainController {
     private IssueDAO issueDAO;
     private UserDAO userDAO;
     private UserDataService userDataService;
+    private DataInit initializer;
 
     @Autowired
-    public MainController(IssueDAO issueDAO, UserDAO userDAO, UserDataService userDataService) {
+    public MainController(IssueDAO issueDAO, UserDAO userDAO,
+                          DataInit initializer, UserDataService userDataService) {
         this.issueDAO = issueDAO;
         this.userDAO = userDAO;
         this.userDataService = userDataService;
+        this.initializer = initializer;
     }
 
     @GetMapping("/")
@@ -42,8 +47,13 @@ public class MainController {
     public String issues(Model m) {
         Iterable<IssueEntity> entities = issueDAO.findAll();
         m.addAttribute("issues", entities);
-        m.addAttribute("issueCount", ((Collection<?>)entities).size());
         return "issues";
+    }
+
+    @PostMapping("/refresh")
+    public ModelAndView refreshData(@RequestParam("returnUrl") String returnUrl, Model m) {
+        initializer.loadData();
+        return new ModelAndView("redirect:" + returnUrl);
     }
 
 //    @ResponseBody
