@@ -58,7 +58,7 @@
                                     <tr>
                                         <td th:text="${userLoad.userName}"></td>
                                         <th:block th:each="day : ${days}">
-                                            <td class="mdl-data-table__cell" th:text='${userLoad.getLoad(day)}'></td>
+                                            <td class="mdl-data-table__cell" th:text="${userLoad.getStringLoad(day)}"></td>
                                         </th:block>
 <!--                                        <th:block th:each="key : ${userLoad.load.keySet()}">-->
 <!--                                            <td th:class="${userLoad.load[key]} > 1 ? 'overload': ''" th:text="${userLoad.load[key] * 100}" %></td>-->

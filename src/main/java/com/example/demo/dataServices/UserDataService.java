@@ -4,6 +4,7 @@ package com.example.demo.dataServices;
 import com.example.demo.mapperClass.User;
 import com.example.demo.model.IssueEntity;
 import com.example.demo.model.UserEntity;
+import com.example.demo.viewModels.IssueLoadModel;
 import com.example.demo.viewModels.UserLoadModel;
 import com.example.demo.viewModels.UserLoadViewModel;
 import com.mashape.unirest.http.HttpResponse;
@@ -12,9 +13,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.MultiValueMap;
 
-import java.lang.reflect.Array;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -68,8 +67,8 @@ public class UserDataService {
             List<IssueEntity> currentIssues = StreamSupport.stream(user.getIssues().spliterator(), false)
                     .filter(x -> x.getIssueStatus().getId() == 3)  // In Progress status
                     .collect(Collectors.toList());
-            double currentLoad = currentIssues.stream().mapToDouble(x -> this.getLoad(x)).sum();
-            if (currentLoad < 0.95) {  // if load < 95%
+            List<IssueLoadModel> currentLoad = currentIssues.stream().map(x -> new IssueLoadModel(x, this.getLoad(x))).collect(Collectors.toList());
+            if (IssueLoadModel.getSumLoad(currentLoad) < 0.95) {  // if load < 95%
                 List<IssueEntity> futureIssues = StreamSupport.stream(user.getIssues().spliterator(), false)
                         .filter(x -> x.getIssueStatus().getId() == 10006)  // To Do status
                         .collect(Collectors.toList());
@@ -79,7 +78,7 @@ public class UserDataService {
                             .stream().map(x -> {
                                 Date deadlineDate = x.getDueDate() != null ? x.getDueDate() : x.getSprint().getEndDate();
                                 ZonedDateTime deadlineDateTime = ZonedDateTime.ofInstant(deadlineDate.toInstant(), ZoneId.systemDefault());
-                                double k = Period.between(deadlineDateTime.toLocalDate(), currentLocalDate).getDays();   // currentDate / currentLocalDate проблема с final
+                                double k = Period.between(currentLocalDate, deadlineDateTime.toLocalDate()).getDays();   // currentDate / currentLocalDate проблема с final
                                 Number[] res = {futureIssues.indexOf(x), k / x.getPriority().getId()};
                                 return res;
                             }).collect(Collectors.toList());
@@ -89,28 +88,37 @@ public class UserDataService {
                             .filter(x -> (double)x[1] == minCoefficient.orElse(firstCoefficient))
                             .mapToInt(x->(int)x[0]).findFirst();
                     if (index.isPresent()) {
-                        currentLoad += this.getLoad(futureIssues.get(index.getAsInt()));
+                        IssueEntity selectedIssue = futureIssues.get(index.getAsInt());
+                        currentLoad.add(new IssueLoadModel(selectedIssue, this.getLoad(selectedIssue)));
                     }
-                }
-            }
-            if (currentLoad > 0) {
-                while (currentLoad > 1) {
-                    // + учесть dueDate, хранить список выбранных задач
-                    String day = currentDate.format(dateFormat);
-                    if (!days.contains(day)) {
-                        days.add(day);
-                    }
-                    if (currentLocalDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentLocalDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                        loadData.addLoad(day, 0);
-                    } else {
-                        loadData.addLoad(day, 1);
-                        currentLoad -= 1;
-                    }
-                    currentDate = currentDate.plusDays(1);
                 }
             }
 
-            loadData.addLoad(currentDate.format(dateFormat), currentLoad);
+            if (IssueLoadModel.getSumLoad(currentLoad) > 0) {
+                for (IssueLoadModel load : currentLoad) {
+                    String day = this.getDateString(days, currentDate);
+                    Date deadlineDate = load.issue.getDueDate() != null ? load.issue.getDueDate() : load.issue.getSprint().getEndDate();
+                    ZonedDateTime dueDate = ZonedDateTime.ofInstant(deadlineDate.toInstant(), ZoneId.systemDefault());
+                    double daysToDeadline = Period.between(currentLocalDate, dueDate.toLocalDate()).getDays();
+
+                    if (daysToDeadline == 0) {  // если сегодня - день дедлайна по задаче, то оставшуюся нагрузку закидываем на сегодняшний день
+                        this.addLoadInfo(loadData, currentDate, load);
+                    }
+                    else {
+                        while (loadData.getLoad(day) + load.load > 1) {
+                            IssueLoadModel remainingLoad = new IssueLoadModel(load.issue, 1 - loadData.getLoad(day));
+                            load.removeLoad(1 - loadData.getLoad(day));
+                            this.addLoadInfo(loadData, currentDate, remainingLoad);
+
+                            currentDate = currentDate.plusDays(1);
+                            day = this.getDateString(days, currentDate);
+                        }
+                        this.addLoadInfo(loadData, currentDate, load);
+                    }
+                }
+                currentDate = currentDate.plusDays(1);
+            }
+
             userLoads.add(loadData);
             currentDate = currentLocalDate;
         }
@@ -119,12 +127,34 @@ public class UserDataService {
         for (UserLoadModel userLoad : userLoads) {
             for (String day : days) {
                 if (!userLoad.load.containsKey(day)) {
-                    userLoad.addLoad(day, 0);
+                    userLoad.addLoad(day);
                 }
             }
         }
 
         return new UserLoadViewModel(userLoads, days) ;
+    }
+
+    private String getDateString(List<String> days, LocalDate currentDate) {
+        String day = currentDate.format(dateFormat);
+        if (!days.contains(day)) {
+            days.add(day);
+        }
+        return day;
+    }
+
+    private void addLoadInfo(UserLoadModel loadData, LocalDate currentDate, IssueLoadModel load) {
+        String day = currentDate.format(dateFormat);
+        boolean isAdded = false;
+        do {
+            if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                loadData.addLoad(day);
+                currentDate.plusDays(1);
+            } else {
+                loadData.addLoad(currentDate.format(dateFormat), load);
+                isAdded = true;
+            }
+        } while (!isAdded);
     }
 
     private double getLoad(IssueEntity issue) {
