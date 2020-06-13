@@ -13,26 +13,7 @@
 </head>
 
     <div class="layout mdl-layout mdl-js-layout">
-        <header class="mdl-layout__header mdl-layout__header--transparent">
-            <div class="mdl-layout__header-row">
-                <span>Jira</span>
-
-                <div class="mdl-layout-spacer"></div>
-
-                <nav class="mdl-navigation">
-                    <a th:href="@{/}">Нагрузка</a>
-                    <a th:href="@{/issues}">Задачи</a>
-                </nav>
-            </div>
-        </header>
-
-        <div class="mdl-layout__drawer">
-            <span class="mdl-layout-title">Jira</span>
-            <nav class="mdl-navigation">
-                <a th:href="@{/}">Нагрузка</a>
-                <a th:href="@{/issues}">Задачи</a>
-            </nav>
-        </div>
+        <div th:replace="fragments :: header" />
 
         <main class="mdl-layout__content">
             <div class="mdl-grid">
@@ -58,7 +39,9 @@
                                     <tr>
                                         <td th:text="${userLoad.userName}"></td>
                                         <th:block th:each="day : ${days}">
-                                            <td class="mdl-data-table__cell" th:text="${userLoad.getStringLoad(day)}"></td>
+                                            <td class="mdl-data-table__cell">
+                                                <div th:class="${userLoad.isOverload(day) ? 'overload' : ''}" th:text="${userLoad.getStringLoad(day)}"></div>
+                                            </td>
                                         </th:block>
 <!--                                        <th:block th:each="key : ${userLoad.load.keySet()}">-->
 <!--                                            <td th:class="${userLoad.load[key]} > 1 ? 'overload': ''" th:text="${userLoad.load[key] * 100}" %></td>-->
@@ -73,15 +56,8 @@
             </div>
         </main>
 
-        <footer class="mdl-mini-footer">
-            <div class="mdl-mini-footer--left-section">
-                <div class="mdl-logo">
-                    <span>&copy;</span>
-                    <span>2020 Анализ нагрузки сотрудников</span>
-                </div>
-            </div>
-        </footer>
+        <div th:replace="fragments :: footer" />
     </div>
-    <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery-slim.js}"></script>
+    <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery.js}"></script>
 </body>
 </html>

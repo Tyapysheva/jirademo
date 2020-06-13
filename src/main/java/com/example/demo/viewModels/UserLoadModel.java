@@ -43,4 +43,9 @@ public class UserLoadModel {
         double load = this.getLoad(day);
         return String.format("%4.3f %%", load * 100);
     }
+
+    public boolean isOverload(String day) {
+        double load = this.getLoad(day);
+        return load > 1;
+    }
 }

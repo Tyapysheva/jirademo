@@ -149,7 +149,7 @@ public class UserDataService {
         do {
             if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 loadData.addLoad(day);
-                currentDate.plusDays(1);
+                currentDate = currentDate.plusDays(1);
             } else {
                 loadData.addLoad(currentDate.format(dateFormat), load);
                 isAdded = true;
