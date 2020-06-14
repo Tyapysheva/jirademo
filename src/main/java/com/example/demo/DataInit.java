@@ -99,12 +99,12 @@ public class DataInit implements ApplicationRunner {
 
         this.issueDAO.saveAll(issues);
 
-        try (InputStream inputStream = new FileInputStream("src/main/resources/application.properties");
-             OutputStream outputStream = new FileOutputStream("src/main/resources/application.properties")) {
+        try (InputStream inputStream = new FileInputStream("src/main/resources/jira.properties")) {
             Properties props = new Properties();
             props.load(inputStream);
             String message = props.getProperty("welcome.message");
             props.setProperty("welcome.test", "test message");
+            OutputStream outputStream = new FileOutputStream("src/main/resources/jira.properties");
             props.store(outputStream, null);
         }
         catch (IOException ex) {
