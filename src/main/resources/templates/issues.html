@@ -33,15 +33,17 @@
                             <thead>
                             <tr>
                                 <th class="mdl-data-table__cell--non-numeric">Ключ</th>
+                                <th class="mdl-data-table__cell--non-numeric">Название задачи</th>
                                 <th class="mdl-data-table__cell--non-numeric">Тип задачи</th>
                                 <th class="mdl-data-table__cell--non-numeric">Исполнитель</th>
-                                <th>Спринт</th>
+                                <th class="mdl-data-table__cell--non-numeric">Спринт</th>
                             </tr>
                             </thead>
                             <tbody>
                             <th:block th:each="issue : ${issues}">
                                 <tr>
                                     <td th:text="${issue.getKey()}"></td>
+                                    <td th:text="${issue.getSummary()}"></td>
                                     <td th:text="${issue.issueType.getName()}"></td>
                                     <td th:text="${issue.user.getDisplayName()}"></td>
                                     <td th:text="${issue.sprint.getName()}"></td>

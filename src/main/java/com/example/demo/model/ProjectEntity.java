@@ -21,6 +21,12 @@ public class ProjectEntity{
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Collection<IssueEntity> issues;
 
+//    @ManyToMany
+//    @JoinTable(name = "project_roles",
+//            joinColumns = @JoinColumn(name = "project_Id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id"))
+//    private Collection<RoleEntity> roles;
+
     private String projectTypeKey;
 
     public Long getId() {

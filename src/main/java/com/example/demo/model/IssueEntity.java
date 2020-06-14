@@ -12,6 +12,7 @@ public class IssueEntity {
     private Long id;
     @Column(name = "keyIs")
     private String key;
+    private String summary;
     private Date created;
     @Column(name = "aggregate")
     private Integer aggregatetimeoriginalestimate;
@@ -146,5 +147,9 @@ public class IssueEntity {
 
     public void setIssueStatus(IssueStatusEntity issueStatus) {
         this.issueStatus = issueStatus;
+    }
+
+    public String getSummary() {
+        return summary;
     }
 }

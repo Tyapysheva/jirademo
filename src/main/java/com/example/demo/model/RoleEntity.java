@@ -14,4 +14,12 @@ public class RoleEntity {
 
     @ManyToMany(mappedBy = "roles")
     private Collection<UserEntity> users;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Collection<UserEntity> getUsers() {
+        return users;
+    }
 }

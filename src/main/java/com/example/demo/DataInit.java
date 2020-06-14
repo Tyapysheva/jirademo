@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -22,6 +23,7 @@ public class DataInit implements ApplicationRunner {
     private UserDAO userDAO;
     private DashboardDAO dashboardDAO;
     private SprintDAO sprintDAO;
+    private RoleDAO roleDAO;
 
     private IssueDataService issueDataService;
     private IssueTypeDataService issueTypeDataService;
@@ -30,15 +32,18 @@ public class DataInit implements ApplicationRunner {
     private PriorityDataService priorityDataService;
     private UserDataService userDataService;
     private DashboardDataService dashboardDataService;
+    private RoleDataService roleDataService;
 
     @Autowired
     public DataInit(IssueTypeDAO issueTypeDAO, IssueStatusDAO issueStatusDAO,
-                    UserDAO userDAO,DashboardDAO dashboardDAO,
-                    IssueDAO issueDAO,ProjectDAO projectDAO, PriorityDAO priorityDAO,
-                    IssueDataService issueDataService,PriorityDataService priorityDataService,
+                    UserDAO userDAO, DashboardDAO dashboardDAO,
+                    IssueDAO issueDAO, ProjectDAO projectDAO, PriorityDAO priorityDAO,
+                    SprintDAO sprintDAO, RoleDAO roleDAO,
+                    IssueDataService issueDataService, PriorityDataService priorityDataService,
                     IssueTypeDataService issueTypeDataService, IssueStatusDataService issueStatusDataService,
-                    ProjectDataService projectDataService,UserDataService userDataService,
-                    DashboardDataService dashboardDataService, SprintDAO sprintDAO) {
+                    ProjectDataService projectDataService, UserDataService userDataService,
+                    DashboardDataService dashboardDataService,
+                    RoleDataService roleDataService) {
         this.issueDAO = issueDAO;
         this.issueTypeDAO = issueTypeDAO;
         this.issueStatusDAO = issueStatusDAO;
@@ -47,6 +52,7 @@ public class DataInit implements ApplicationRunner {
         this.userDAO = userDAO;
         this.dashboardDAO = dashboardDAO;
         this.sprintDAO = sprintDAO;
+        this.roleDAO = roleDAO;
 
         this.issueDataService = issueDataService;
         this.issueTypeDataService = issueTypeDataService;
@@ -55,6 +61,7 @@ public class DataInit implements ApplicationRunner {
         this.priorityDataService = priorityDataService;
         this.userDataService = userDataService;
         this.dashboardDataService = dashboardDataService;
+        this.roleDataService = roleDataService;
     }
 
     @Override
@@ -67,11 +74,14 @@ public class DataInit implements ApplicationRunner {
         Iterable<IssueStatusEntity> statuses = issueStatusDataService.getAll();
         Iterable<ProjectEntity> projects = projectDataService.getAll();
         Iterable<PriorityEntity> priorities = priorityDataService.getAll();
-        Iterable<UserEntity> users = userDataService.getAll();
         Iterable<DashboardEntity> dashboards = dashboardDataService.getAll();
 
         List<String> projectKeys = StreamSupport.stream(projects.spliterator(), false).map(p -> p.getKey()).collect(Collectors.toList());
         Iterable<IssueEntity> issues = issueDataService.getAll(projectKeys);
+        Iterable<RoleEntity> roles = roleDataService.getAll(projectKeys);
+        Iterable<UserEntity> users = userDataService.getAll();
+
+        users = roleDataService.setUserRoles(users, roles, projectKeys);
 
         List<SprintEntity> sprints = StreamSupport.stream(issues.spliterator(), false)
                 .map(x -> x.getSprint())
@@ -83,9 +93,24 @@ public class DataInit implements ApplicationRunner {
         this.projectDAO.saveAll(projects);
         this.priorityDAO.saveAll(priorities);
         this.dashboardDAO.saveAll(dashboards);
+        this.roleDAO.saveAll(roles);
         this.userDAO.saveAll(users);
         this.sprintDAO.saveAll(sprints);
 
         this.issueDAO.saveAll(issues);
+
+        try (InputStream inputStream = new FileInputStream("src/main/resources/application.properties");
+             OutputStream outputStream = new FileOutputStream("src/main/resources/application.properties")) {
+            Properties props = new Properties();
+            props.load(inputStream);
+            String message = props.getProperty("welcome.message");
+            props.setProperty("welcome.test", "test message");
+            props.store(outputStream, null);
+        }
+        catch (IOException ex) {
+            System.out.println("Alarm, error!")
+            ;
+        }
+
     }
 }

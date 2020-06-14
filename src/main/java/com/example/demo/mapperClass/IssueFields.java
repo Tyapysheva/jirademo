@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class IssueFields {
 
+    public String summary;
     public Date statuscategorychangedate; // это поле - дата изменения статуса задачи, напиши, если оно необходимо
     public int aggregatetimeoriginalestimate;
     public int timeestimate;

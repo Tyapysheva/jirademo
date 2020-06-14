@@ -1,12 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.dataServices.DashboardDataService;
-import com.example.demo.dataServices.IssueDataService;
-import com.example.demo.dataServices.IssueStatusDataService;
-import com.example.demo.dataServices.IssueTypeDataService;
-import com.example.demo.dataServices.PriorityDataService;
-import com.example.demo.dataServices.ProjectDataService;
-import com.example.demo.dataServices.UserDataService;
+import com.example.demo.dataServices.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.ObjectMapper;
@@ -91,4 +85,6 @@ public class DemoApplication {
         return new DashboardDataService();
     }
 
+    @Bean
+    public RoleDataService roleDataService() { return new RoleDataService(); }
 }

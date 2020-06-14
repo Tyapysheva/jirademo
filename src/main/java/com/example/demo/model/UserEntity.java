@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name="User")
@@ -49,6 +50,31 @@ public class UserEntity {
     }
 
     public Iterable<IssueEntity> getIssues() {
+        if (issues == null) {
+            issues = new ArrayList<>();
+        }
         return issues;
+    }
+
+    public Iterable<RoleEntity> getRoles() {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+        return roles;
+    }
+
+    public void addRole(RoleEntity role) {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+        roles.add(role);
+    }
+
+    public boolean hasRole(Long roleId) {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+        Optional<RoleEntity> role = roles.stream().filter(x->x.getId() == roleId).findFirst();
+        return role.isPresent();
     }
 }
