@@ -122,8 +122,8 @@ public class UserDataService {
                         }
                         this.addLoadInfo(loadData, currentDate, load);
                     }
+                    currentDate = currentDate.plusDays(1);
                 }
-                currentDate = currentDate.plusDays(1);
             }
 
             userLoads.add(loadData);
