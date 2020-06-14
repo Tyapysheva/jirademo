@@ -15,6 +15,12 @@ public class UserEntity {
     private String accountType;
    // private ArrayList<ProjectEntity> projects;
 
+    @ManyToMany
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "accountId"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<RoleEntity> roles;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Collection<IssueEntity> issues;
 

@@ -9,6 +9,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,14 +20,20 @@ public class ProjectDataService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private static String username = "onelovezenit@gmail.com";
-    private static String token = "dw2Xw44FxbRiDXvpbs4NBFFD";
+    @Value("${credentials.username}")
+    private String username;
+
+    @Value("${credentials.token}")
+    private String token;
+
+    @Value("${jira.address}")
+    private String address;
 
     public Iterable<ProjectEntity> getAll() {
         HttpResponse<Project[]> response = null;
         List<ProjectEntity> result = new ArrayList<>();
         try {
-            response = Unirest.get("https://tyapysheva.atlassian.net/rest/api/2/project")
+            response = Unirest.get(String.format("%s/rest/api/2/project", this.address))
                     .basicAuth(username, token)
                     .header("Accept", "application/json")
                     .asObject(Project[].class);

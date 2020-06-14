@@ -13,6 +13,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -27,14 +28,20 @@ public class UserDataService {
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM E");
     private final Integer secondsInHour = 3600;
 
-    private static String username = "onelovezenit@gmail.com";
-    private static String token = "dw2Xw44FxbRiDXvpbs4NBFFD";
+    @Value("${credentials.username}")
+    private String username;
+
+    @Value("${credentials.token}")
+    private String token;
+
+    @Value("${jira.address}")
+    private String address;
 
     public Iterable<UserEntity> getAll() {
         HttpResponse<User[]> response = null;
         List<UserEntity> result = new ArrayList<>();
         try {
-            response = Unirest.get("https://tyapysheva.atlassian.net/rest/api/2/users/search")
+            response = Unirest.get(String.format("%s/rest/api/2/users/search", this.address))
                     .basicAuth(username, token)
                     .header("Accept", "application/json")
                     .asObject(User[].class);

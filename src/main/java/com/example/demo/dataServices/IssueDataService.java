@@ -11,6 +11,7 @@ import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.util.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,8 +28,15 @@ public class IssueDataService {
     private final DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private final DateFormat dateTimeFormatVariant = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ");
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private static String username = "onelovezenit@gmail.com";
-    private static String token = "dw2Xw44FxbRiDXvpbs4NBFFD";
+
+    @Value("${credentials.username}")
+    private String username;
+
+    @Value("${credentials.token}")
+    private String token;
+
+    @Value("${jira.address}")
+    private String address;
 
     public Iterable<IssueEntity> getAll(Iterable<String> projectKeys) {
         List<IssueEntity> result = new ArrayList<>();
@@ -56,7 +64,7 @@ public class IssueDataService {
     private IssueResponse find(String project, Integer startAt, Integer maxResult) {
         HttpResponse<IssueResponse> response = null;
         IssueResponse result = null;
-        String request = String.format("https://tyapysheva.atlassian.net/rest/api/2/search?jql=project=%s&startAt=%d&maxResults=%d", project, startAt, maxResult);
+        String request = String.format("%s/rest/api/2/search?jql=project=%s&startAt=%d&maxResults=%d", this.address, project, startAt, maxResult);
         try {
             response = Unirest.get(request)
                     .basicAuth(username, token)

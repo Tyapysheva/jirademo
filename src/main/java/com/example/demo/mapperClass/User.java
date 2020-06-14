@@ -2,8 +2,8 @@ package com.example.demo.mapperClass;
 
 public class User {
 
-    public String accountId;
-    public String displayName;
-    public String accountType;
+    private String accountId;
+    private String displayName;
+    private String accountType;
 
 }

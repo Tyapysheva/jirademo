@@ -10,6 +10,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +20,22 @@ public class DashboardDataService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private static String username = "onelovezenit@gmail.com";
-    private static String token = "dw2Xw44FxbRiDXvpbs4NBFFD";
+    @Value("${credentials.username}")
+    private String username;
+
+    @Value("${credentials.token}")
+    private String token;
+
+    @Value("${jira.address}")
+    private String address;
+
     private Dashboard dashboard;
 
     public Iterable<DashboardEntity> getAll() {
         HttpResponse<DashboardResponse> response = null;
         List<DashboardEntity> result = new ArrayList<>();
         try {
-            response = Unirest.get("https://tyapysheva.atlassian.net/rest/api/2/dashboard")
+            response = Unirest.get(String.format("%s/rest/api/2/dashboard", this.address))
                     .basicAuth(username, token)
                     .header("Accept", "application/json")
                     .asObject(DashboardResponse.class);
