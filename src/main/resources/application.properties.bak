@@ -11,21 +11,22 @@
 #http://localhost:8080/h2-console
 
 #spring.config.name=jira.properties
-#spring.config.additional-location=src/main/config/jira.properties
+spring.config.additional-location=/home/cloud_detergent/Projects/Jira/jirademo/src/main/config/jira.properties
+#/config/jira.properties
 
 #DB properties:
-spring.datasource.url=jdbc:mysql://localhost:3306/test
-spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
-spring.datasource.username=root
-spring.datasource.password=Mysql_12
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+#spring.datasource.url=jdbc:mysql://localhost:3306/test
+#spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+#spring.datasource.username=root
+#spring.datasource.password=Mysql_12
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 # SQLite db properties
-#spring.datasource.url=jdbc:sqlite:/tmp/jira.db
-#spring.datasource.driverClassName=org.sqlite.JDBC
-#spring.datasource.username=
-#spring.datasource.password=
-#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLiteDialect
+spring.datasource.url=jdbc:sqlite:/tmp/jira.db
+spring.datasource.driverClassName=org.sqlite.JDBC
+spring.datasource.username=
+spring.datasource.password=
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLiteDialect
 
 #Hibernate Configuration:
 spring.jpa.show-sql=true

@@ -99,18 +99,17 @@ public class DataInit implements ApplicationRunner {
 
         this.issueDAO.saveAll(issues);
 
-        try (InputStream inputStream = new FileInputStream("src/main/resources/jira.properties")) {
-            Properties props = new Properties();
-            props.load(inputStream);
-            String message = props.getProperty("welcome.message");
-            props.setProperty("welcome.test", "test message");
-            OutputStream outputStream = new FileOutputStream("src/main/resources/jira.properties");
-            props.store(outputStream, null);
-        }
-        catch (IOException ex) {
-            System.out.println("Alarm, error!")
-            ;
-        }
+//        try (InputStream inputStream = new FileInputStream("target/classes/application.properties")) {
+//            Properties props = new Properties();
+//            props.load(inputStream);
+//            String message = props.getProperty("welcome.message");
+//            props.setProperty("welcome.test", "test message");
+//            OutputStream outputStream = new FileOutputStream("target/classes/application.properties");
+//            props.store(outputStream, null);
+//        }
+//        catch (IOException ex) {
+//            System.out.println("Alarm, error!");
+//        }
 
     }
 }
