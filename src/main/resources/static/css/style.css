@@ -103,3 +103,7 @@ footer {
 .overload {
     color: rgb(200,0,0);
 }
+
+.role {
+    font-weight: bold;
+}

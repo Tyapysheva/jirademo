@@ -6,12 +6,13 @@ import java.util.List;
 
 public class UserLoadModel {
     public String userName;
+    public String userRoles;
     public HashMap<String, List<IssueLoadModel>> load;
 
-    public UserLoadModel(String userName) {
+    public UserLoadModel(String userName, String userRoles) {
         this.userName = userName;
         this.load = new HashMap<>();
-
+        this.userRoles = userRoles;
     }
 
     public void addLoad(String day, IssueLoadModel load) {

@@ -59,23 +59,21 @@ public class UserDataService {
     }
 
     public UserLoadViewModel prepare(Iterable<UserEntity> users) {
-        List<UserEntity> requiredUsers = StreamSupport.stream(users.spliterator(), false)
-                .filter(x -> "atlassian".equals(x.getAccountType()))
-                .collect(Collectors.toList());
         List<UserLoadModel> userLoads = new ArrayList<>();
         List<String> days = new ArrayList<>();
 
         LocalDate currentLocalDate = Instant.ofEpochMilli(new Date().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate currentDate = currentLocalDate;
 
-        for (UserEntity user : requiredUsers) {
-            UserLoadModel loadData = new UserLoadModel(user.getDisplayName());
+        for (UserEntity user : users) {
+            UserLoadModel loadData = new UserLoadModel(user.getDisplayName(), user.getRoleString());
 
             List<IssueEntity> currentIssues = StreamSupport.stream(user.getIssues().spliterator(), false)
                     .filter(x -> x.getIssueStatus().getId() == 3)  // In Progress status
                     .collect(Collectors.toList());
             List<IssueLoadModel> currentLoad = currentIssues.stream().map(x -> new IssueLoadModel(x, this.getLoad(x))).collect(Collectors.toList());
             if (IssueLoadModel.getSumLoad(currentLoad) < 0.95) {  // if load < 95%
+                // TODO Распространить будущие задачи, если загрузка > 0.95
                 List<IssueEntity> futureIssues = StreamSupport.stream(user.getIssues().spliterator(), false)
                         .filter(x -> x.getIssueStatus().getId() == 10006)  // To Do status
                         .collect(Collectors.toList());

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="User")
@@ -56,6 +57,10 @@ public class UserEntity {
         return issues;
     }
 
+    public void setIssues(Collection<IssueEntity> issues) {
+        this.issues = issues;
+    }
+
     public Iterable<RoleEntity> getRoles() {
         if (roles == null) {
             roles = new ArrayList<>();
@@ -74,7 +79,18 @@ public class UserEntity {
         if (roles == null) {
             roles = new ArrayList<>();
         }
-        Optional<RoleEntity> role = roles.stream().filter(x->x.getId() == roleId).findFirst();
-        return role.isPresent();
+        boolean hasRole = roles.stream().anyMatch(x->x.getId().equals(roleId));
+        return hasRole;
+    }
+
+    public String getRoleString() {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        };
+        Collection<String> roleNames = roles.stream()
+                .map(x -> x.getName())
+                .filter(x -> !"Administrators".equals(x))
+                .collect(Collectors.toList());
+        return String.join(", ", roleNames);
     }
 }

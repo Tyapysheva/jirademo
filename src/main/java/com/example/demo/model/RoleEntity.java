@@ -22,4 +22,8 @@ public class RoleEntity {
     public Collection<UserEntity> getUsers() {
         return users;
     }
+
+    public String getName() {
+        return name;
+    }
 }

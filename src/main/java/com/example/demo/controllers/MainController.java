@@ -3,8 +3,10 @@ package com.example.demo.controllers;
 import com.example.demo.DataInit;
 import com.example.demo.dataServices.UserDataService;
 import com.example.demo.model.IssueEntity;
+import com.example.demo.model.RoleEntity;
 import com.example.demo.model.UserEntity;
 import com.example.demo.repositories.IssueDAO;
+import com.example.demo.repositories.ProjectDAO;
 import com.example.demo.repositories.UserDAO;
 import com.example.demo.viewModels.UserLoadViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,31 +15,69 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Controller
 public class MainController {
     private IssueDAO issueDAO;
     private UserDAO userDAO;
+    private ProjectDAO projectDAO;
     private UserDataService userDataService;
     private DataInit initializer;
 
     @Autowired
-    public MainController(IssueDAO issueDAO, UserDAO userDAO,
+    public MainController(IssueDAO issueDAO, UserDAO userDAO, ProjectDAO projectDAO,
                           DataInit initializer, UserDataService userDataService) {
         this.issueDAO = issueDAO;
         this.userDAO = userDAO;
+        this.projectDAO = projectDAO;
         this.userDataService = userDataService;
         this.initializer = initializer;
     }
 
     @GetMapping("/")
-    public String index(Model m) {
+    public String index(@RequestParam("project") Optional<String> projectKey, @RequestParam("role") Optional<Long> roleId, Model m) {
         Iterable<UserEntity> users = userDAO.findAll();
-        UserLoadViewModel userLoadData = this.userDataService.prepare(users);
+        List<UserEntity> requiredUsers = StreamSupport.stream(users.spliterator(), false)
+                .filter(x -> "atlassian".equals(x.getAccountType()))
+                .collect(Collectors.toList());
+
+        if (projectKey.isPresent() && !"".equals(projectKey.get())) {
+            String projectKeyQuery = projectKey.get().toUpperCase();
+            requiredUsers.forEach(x -> {
+                List<IssueEntity> filteredIssues = StreamSupport.stream(x.getIssues().spliterator(), false)
+                        .filter(y -> projectKeyQuery.equals(y.getProject().getKey().toUpperCase()))
+                        .collect(Collectors.toList());
+                x.setIssues(filteredIssues);
+            });
+        }
+
+        if (roleId.isPresent()) {
+            requiredUsers = requiredUsers.stream()
+                    .filter(x -> x.hasRole(roleId.get()))
+                    .collect(Collectors.toList());
+        }
+
+        UserLoadViewModel userLoadData = this.userDataService.prepare(requiredUsers);
+
+        List<String> projects = StreamSupport.stream(projectDAO.findAll().spliterator(), false)
+                .map(x -> x.getKey())
+                .collect(Collectors.toList());
+
+        Map<Long, String> roles = requiredUsers.stream()
+                .map(x -> x.getRoles())
+                .flatMap(x -> StreamSupport.stream(x.spliterator(), false))
+                .filter(x -> !"Administrators".equals(x.getName()))
+                .collect(Collectors.toMap(RoleEntity::getId, RoleEntity::getName, (r1, r2) -> r1));
+
         m.addAttribute("days", userLoadData.days);
         m.addAttribute("userLoads", userLoadData.userLoads);
+        m.addAttribute("roles", roles);
+        m.addAttribute("projects", projects);
         return "index";
     }
 
