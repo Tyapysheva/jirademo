@@ -25,7 +25,24 @@
                     </div>
 
                     <div class="data-block">
-                        <!--4654564 -->
+
+                        <div class="filter-block">
+                            <form name="filtration" method="GET" th:action="@{/}">
+                                <select name="project" id="filter-project">
+                                    <th:block th:each="key : ${projects}">
+                                        <option th:value="${key}" th:text="${key}"
+                                                th:attrappend='selected=${key == selectedProject ? "selected" : ""}'/>
+                                    </th:block>
+                                </select>
+                                <select name="role" id="filter-role">
+                                    <th:block th:each="roleKV : ${roleMap}">
+                                        <option th:value="${roleKV.key}" th:text="${roleKV.value}"
+                                                th:attrappend='selected=${roleKV.key == selectedRole ? "selected" : ""}' />
+                                    </th:block>
+                                </select>
+                            </form>
+                        </div>
+
                         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                             <thead>
                             <tr>
@@ -62,5 +79,17 @@
         <div th:replace="fragments :: footer" />
     </div>
     <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery.js}"></script>
+    <script>
+        $('#filter-project').on('change', () => {
+            let form = document.forms['filtration'];
+            console.log('Change!', form);
+            form.submit();
+        });
+        $('#filter-role').on('change', () => {
+            let form = document.forms['filtration'];
+            console.log('Change role!', form);
+            form.submit();
+        });
+    </script>
 </body>
 </html>

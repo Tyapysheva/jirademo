@@ -28,6 +28,8 @@ public class MainController {
     private ProjectDAO projectDAO;
     private UserDataService userDataService;
     private DataInit initializer;
+    private String allProjectString = "Все проекты";
+    private String allRolesString = "Все роли";
 
     @Autowired
     public MainController(IssueDAO issueDAO, UserDAO userDAO, ProjectDAO projectDAO,
@@ -46,24 +48,6 @@ public class MainController {
                 .filter(x -> "atlassian".equals(x.getAccountType()))
                 .collect(Collectors.toList());
 
-        if (projectKey.isPresent() && !"".equals(projectKey.get())) {
-            String projectKeyQuery = projectKey.get().toUpperCase();
-            requiredUsers.forEach(x -> {
-                List<IssueEntity> filteredIssues = StreamSupport.stream(x.getIssues().spliterator(), false)
-                        .filter(y -> projectKeyQuery.equals(y.getProject().getKey().toUpperCase()))
-                        .collect(Collectors.toList());
-                x.setIssues(filteredIssues);
-            });
-        }
-
-        if (roleId.isPresent()) {
-            requiredUsers = requiredUsers.stream()
-                    .filter(x -> x.hasRole(roleId.get()))
-                    .collect(Collectors.toList());
-        }
-
-        UserLoadViewModel userLoadData = this.userDataService.prepare(requiredUsers);
-
         List<String> projects = StreamSupport.stream(projectDAO.findAll().spliterator(), false)
                 .map(x -> x.getKey())
                 .collect(Collectors.toList());
@@ -73,11 +57,33 @@ public class MainController {
                 .flatMap(x -> StreamSupport.stream(x.spliterator(), false))
                 .filter(x -> !"Administrators".equals(x.getName()))
                 .collect(Collectors.toMap(RoleEntity::getId, RoleEntity::getName, (r1, r2) -> r1));
+        projects.add(allProjectString);
+        roles.put(Long.valueOf(0), allRolesString);
+
+        if (projectKey.isPresent() && !projectKey.get().isEmpty() && !projectKey.get().equals(allProjectString)) {
+            String projectKeyQuery = projectKey.get().toUpperCase();
+            requiredUsers.forEach(x -> {
+                List<IssueEntity> filteredIssues = StreamSupport.stream(x.getIssues().spliterator(), false)
+                        .filter(y -> projectKeyQuery.equals(y.getProject().getKey().toUpperCase()))
+                        .collect(Collectors.toList());
+                x.setIssues(filteredIssues);
+            });
+        }
+
+        if (roleId.isPresent() && roleId.get() != 0) {
+            requiredUsers = requiredUsers.stream()
+                    .filter(x -> x.hasRole(roleId.get()))
+                    .collect(Collectors.toList());
+        }
+
+        UserLoadViewModel userLoadData = this.userDataService.prepare(requiredUsers);
 
         m.addAttribute("days", userLoadData.days);
         m.addAttribute("userLoads", userLoadData.userLoads);
-        m.addAttribute("roles", roles);
+        m.addAttribute("roleMap", roles);
         m.addAttribute("projects", projects);
+        m.addAttribute("selectedRole", roleId.isPresent() ? roleId.get() : 0);
+        m.addAttribute("selectedProject", projectKey.isPresent() ? projectKey.get() : allProjectString);
         return "index";
     }
 

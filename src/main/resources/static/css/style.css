@@ -107,3 +107,11 @@ footer {
 .role {
     font-weight: bold;
 }
+
+.filter-block {
+    float: right;
+}
+
+.filter-block select {
+    display: inline-block;
+}
