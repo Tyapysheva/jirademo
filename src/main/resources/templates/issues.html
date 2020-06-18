@@ -14,20 +14,23 @@
 
     <div class="layout mdl-layout mdl-js-layout">
         <div th:replace="fragments :: header" />
+        <div class="mdl-grid">
+            <section class="card-block mdl-shadow--2dp mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                <div class="section-header">
+                    <h5>Задачи</h5>
+                    <a th:href="@{/}" class="nav-link">Нагрузка</a>
+                    <form method="POST" th:action="@{/refresh/(returnUrl=${'/issues'})}">
+                        <button class="mdl-button" type="submit" name="submit">
+                            <i class="material-icons mdl-list__item-icon">refresh</i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
 
         <main class="mdl-layout__content">
             <div class="mdl-grid">
                 <section class="card-block mdl-shadow--2dp mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                    <div class="section-header">
-                        <i class="material-icons mdl-list__item-icon">library_books</i>
-                        <h4 class="caption">Задачи:</h4>
-                        <form method="POST" th:action="@{/refresh/(returnUrl=${'/issues'})}">
-                            <button type="submit" name="submit">
-                                <i class="material-icons mdl-list__item-icon">refresh</i>
-                            </button>
-                        </form>
-                    </div>
-
                     <div class="data-block">
                         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                             <thead>

@@ -2,14 +2,7 @@
     <th:block th:fragment="header">
         <header class="mdl-layout__header mdl-layout__header--transparent">
             <div class="mdl-layout__header-row">
-                <span>Jira</span>
-
                 <div class="mdl-layout-spacer"></div>
-
-                <nav class="mdl-navigation">
-                    <a th:href="@{/}">Нагрузка</a>
-                    <a th:href="@{/issues}">Задачи</a>
-                </nav>
             </div>
         </header>
 
@@ -24,10 +17,7 @@
 
     <footer class="mdl-mini-footer" th:fragment="footer">
         <div class="mdl-mini-footer--left-section">
-            <div class="mdl-logo">
-                <span>&copy;</span>
-                <span>2020 Анализ нагрузки сотрудников</span>
-            </div>
+            <span>&copy; 2020 Анализ нагрузки сотрудников</span>
         </div>
     </footer>
 </html>

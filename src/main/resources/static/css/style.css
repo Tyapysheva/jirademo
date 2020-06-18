@@ -1,6 +1,4 @@
 body {
-    background: url('/img/background.png') repeat-y;
-    background-size: cover;
     height: 100%;
 }
 
@@ -14,7 +12,7 @@ body {
 }
 
 .mdl-layout__content {
-    padding: 24px;
+
 }
 
 .layout .mdl-layout__header,
@@ -31,8 +29,6 @@ body {
 
 
 section.card-block {
-    background-image: linear-gradient(to bottom right, #fff, #CCC3A4);
-    border-radius: 5px;
     padding: 10px;
 }
 
@@ -42,12 +38,17 @@ section.card-block.description {
 
 section.card-block > .section-header {
     display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-columns: 1fr 11fr 1fr;
     grid-template-rows: 1fr;
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
-    justify-items: center;
+    justify-items: right;
     align-items: center;
+}
+
+section.card-block > .section-header.workload{
+    grid-template-columns: 1fr 6fr 1fr 1fr;
+    justify-items: center;
 }
 
 section.card-block .caption {
@@ -79,7 +80,7 @@ section.card-block .backLink > span {
     height: 150px;
 }
 
-footer {
+.mdl-mini-footer {
     background-color: transparent;
 }
 
@@ -108,10 +109,19 @@ footer {
     font-weight: bold;
 }
 
-.filter-block {
+.filter-block select {
+    display: inline-block;
+}
+
+.section-header-actions {
+    display: inline-block;
     float: right;
 }
 
-.filter-block select {
-    display: inline-block;
+.nav-link {
+    color: #757575;
+}
+
+.h5-workload {
+    margin: 0;
 }
