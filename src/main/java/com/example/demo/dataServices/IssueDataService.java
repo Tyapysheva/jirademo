@@ -90,6 +90,7 @@ public class IssueDataService {
         issueEntity.setProject(modelMapper.map(issue.fields.project, ProjectEntity.class));
         issueEntity.setUser(modelMapper.map(issue.fields.assignee, UserEntity.class));
         issueEntity.setPriority(modelMapper.map(issue.fields.priority, PriorityEntity.class));
+        issueEntity.setSummary(issue.fields.summary);
 
         Optional<Date> createdDate = this.parseDate(issue.fields.created);
         if (createdDate.isPresent()) {
