@@ -72,30 +72,13 @@ public class UserDataService {
                     .filter(x -> x.getIssueStatus().getId() == 3)  // In Progress status
                     .collect(Collectors.toList());
             List<IssueLoadModel> currentLoad = currentIssues.stream().map(x -> new IssueLoadModel(x, this.getLoad(x))).collect(Collectors.toList());
-            if (IssueLoadModel.getSumLoad(currentLoad) < 0.95) {  // if load < 95%
+            IssueEntity selectedIssue = null;
+            while (IssueLoadModel.getSumLoad(currentLoad) < 0.95) {  // if load < 95%
                 // TODO Распространить будущие задачи, если загрузка > 0.95
-                List<IssueEntity> futureIssues = StreamSupport.stream(user.getIssues().spliterator(), false)
-                        .filter(x -> x.getIssueStatus().getId() == 10006)  // To Do status
-                        .collect(Collectors.toList());
-
-                if (futureIssues.size() > 0) {
-                    List<Number[]> choiceCoefficients = futureIssues
-                            .stream().map(x -> {
-                                Date deadlineDate = x.getDueDate() != null ? x.getDueDate() : x.getSprint().getEndDate();
-                                ZonedDateTime deadlineDateTime = ZonedDateTime.ofInstant(deadlineDate.toInstant(), ZoneId.systemDefault());
-                                double k = Period.between(currentLocalDate, deadlineDateTime.toLocalDate()).getDays();   // currentDate / currentLocalDate проблема с final
-                                Number[] res = {futureIssues.indexOf(x), k / x.getPriority().getId()};
-                                return res;
-                            }).collect(Collectors.toList());
-                    OptionalDouble minCoefficient = choiceCoefficients.stream().mapToDouble(x -> (double)x[1]).min();
-                    double firstCoefficient = (double)(choiceCoefficients.get(0)[1]);
-                    OptionalInt index = choiceCoefficients.stream()
-                            .filter(x -> (double)x[1] == minCoefficient.orElse(firstCoefficient))
-                            .mapToInt(x->(int)x[0]).findFirst();
-                    if (index.isPresent()) {
-                        IssueEntity selectedIssue = futureIssues.get(index.getAsInt());
-                        currentLoad.add(new IssueLoadModel(selectedIssue, this.getLoad(selectedIssue)));
-                    }
+                selectedIssue = this.getFutureIssue(currentLocalDate, user, currentLoad);
+                currentLoad.add(new IssueLoadModel(selectedIssue, this.getLoad(selectedIssue)));
+                if (selectedIssue == null) {
+                    break;
                 }
             }
 
@@ -138,6 +121,33 @@ public class UserDataService {
         }
 
         return new UserLoadViewModel(userLoads, days) ;
+    }
+
+    private IssueEntity getFutureIssue(LocalDate currentLocalDate, UserEntity user, List<IssueLoadModel> currentLoad) {
+        List<IssueEntity> futureIssues = StreamSupport.stream(user.getIssues().spliterator(), false)
+                .filter(x -> x.getIssueStatus().getId() == 10006)  // To Do status
+                .collect(Collectors.toList());
+
+        if (futureIssues.size() > 0) {
+            List<Number[]> choiceCoefficients = futureIssues
+                    .stream().map(x -> {
+                        Date deadlineDate = x.getDueDate() != null ? x.getDueDate() : x.getSprint().getEndDate();
+                        ZonedDateTime deadlineDateTime = ZonedDateTime.ofInstant(deadlineDate.toInstant(), ZoneId.systemDefault());
+                        double k = Period.between(currentLocalDate, deadlineDateTime.toLocalDate()).getDays();   // currentDate / currentLocalDate проблема с final
+                        Number[] res = {futureIssues.indexOf(x), k / x.getPriority().getId()};
+                        return res;
+                    }).collect(Collectors.toList());
+            OptionalDouble minCoefficient = choiceCoefficients.stream().mapToDouble(x -> (double)x[1]).min();
+            double firstCoefficient = (double)(choiceCoefficients.get(0)[1]);
+            OptionalInt index = choiceCoefficients.stream()
+                    .filter(x -> (double)x[1] == minCoefficient.orElse(firstCoefficient))
+                    .mapToInt(x->(int)x[0]).findFirst();
+            if (index.isPresent()) {
+                IssueEntity selectedIssue = futureIssues.get(index.getAsInt());
+                return selectedIssue;
+            }
+        }
+        return null;
     }
 
     private String getDateString(List<String> days, LocalDate currentDate) {

@@ -40,7 +40,7 @@
                         </form>
                     </div>
                     <a th:href="@{/issues}" class="nav-link">Задачи</a>
-                    <form method="POST" th:action="@{/refresh/(returnUrl=${'/issues'})}">
+                    <form method="POST" th:action="@{/refresh/(returnUrl=${'/'})}">
                         <button class="mdl-button" type="submit" name="submit">
                             <i class="material-icons mdl-list__item-icon">refresh</i>
                         </button>
@@ -56,8 +56,8 @@
                         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                             <thead>
                             <tr>
-                                <th class="mdl-data-table__cell--non-numeric"></th>
-                                <th class="mdl-data-table__cell--non-numeric"></th>
+                                <th class="mdl-data-table__cell--non-numeric">Сотрудник</th>
+                                <th class="mdl-data-table__cell--non-numeric">Должность</th>
                                 <th:block th:each="day : ${days}">
                                     <th class="mdl-data-table__cell--non-numeric" th:text="${day}"></th>
                                 </th:block>
@@ -66,16 +66,13 @@
                             <tbody>
                                 <th:block th:each="userLoad : ${userLoads}">
                                     <tr>
-                                        <td th:text="${userLoad.userName}"></td>
+                                        <td class="userName" th:text="${userLoad.userName}" th:attr="onclick=|addPlot('${userLoad.userName}')|"></td>
                                         <td class="role" th:text="${userLoad.userRoles}"></td>
                                         <th:block th:each="day : ${days}">
                                             <td class="mdl-data-table__cell">
                                                 <div th:class="${userLoad.isOverload(day) ? 'overload' : ''}" th:text="${userLoad.getStringLoad(day)}"></div>
                                             </td>
                                         </th:block>
-<!--                                        <th:block th:each="key : ${userLoad.load.keySet()}">-->
-<!--                                            <td th:class="${userLoad.load[key]} > 1 ? 'overload': ''" th:text="${userLoad.load[key] * 100}" %></td>-->
-<!--                                        </th:block>-->
                                     </tr>
                                 </th:block>
                             </tbody>
@@ -84,22 +81,85 @@
 
                 </section>
             </div>
+            <div id="plot"></div>
         </main>
 
         <div th:replace="fragments :: footer" />
     </div>
+
     <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery.js}"></script>
-    <script>
-        $('#filter-project').on('change', () => {
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script th:inline="javascript">
+        let submitForm = () => {
             let form = document.forms['filtration'];
-            console.log('Change!', form);
             form.submit();
-        });
-        $('#filter-role').on('change', () => {
-            let form = document.forms['filtration'];
-            console.log('Change role!', form);
-            form.submit();
-        });
+        };
+        let addPlot = (user) => {
+            console.log('Add chart for ', user);
+            let plotCategories = userLoads
+                .filter(x => x.userName === user)
+                .map(x => {
+                    return {
+                        name: x.userName,
+                        data: days.map(y => x.load[y])
+                    }
+                });
+
+            Highcharts.chart('plot', {
+                title: {
+                    text: 'Нагрузка сотрудников'
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'Нагрузка, %'
+                    }
+                },
+
+                xAxis: {
+                    title: {
+                        text: 'Дни'
+                    },
+                    categories: days
+                },
+
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                series: plotCategories,
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+        };
+
+        $('#filter-project').on('change', submitForm);
+        $('#filter-role').on('change', submitForm);
+
+        let days = /*[[${days}]]*/ [];
+        let userLoads = /*[[${userLoadCompactData}]]*/ [];
+
+
     </script>
 </body>
 </html>

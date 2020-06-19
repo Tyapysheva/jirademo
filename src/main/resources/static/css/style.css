@@ -105,6 +105,10 @@ section.card-block .backLink > span {
     color: rgb(200,0,0);
 }
 
+.userName:hover {
+    cursor: pointer;
+}
+
 .role {
     font-weight: bold;
 }
