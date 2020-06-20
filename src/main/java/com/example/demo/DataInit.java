@@ -100,7 +100,11 @@ public class DataInit implements ApplicationRunner {
         List<Long> issueIds = StreamSupport.stream(issues.spliterator(), false)
                 .map(x -> x.getId())
                 .collect(Collectors.toList());
-        issueIds.forEach(i -> this.issueDAO.deleteById(i));
+        issueIds.forEach(i -> {
+            if (this.issueDAO.existsById(i)) {
+                this.issueDAO.deleteById(i);
+            }
+        });
         this.issueDAO.saveAll(issues);
 
 //        try (InputStream inputStream = new FileInputStream("target/classes/application.properties")) {

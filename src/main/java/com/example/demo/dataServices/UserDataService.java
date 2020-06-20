@@ -63,6 +63,7 @@ public class UserDataService {
         List<String> days = new ArrayList<>();
 
         LocalDate currentLocalDate = Instant.ofEpochMilli(new Date().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        currentLocalDate = this.moveToFirstWorkDay(currentLocalDate);
         LocalDate currentDate = currentLocalDate;
 
         for (UserEntity user : users) {
@@ -73,13 +74,16 @@ public class UserDataService {
                     .collect(Collectors.toList());
             List<IssueLoadModel> currentLoad = currentIssues.stream().map(x -> new IssueLoadModel(x, this.getLoad(x))).collect(Collectors.toList());
             IssueEntity selectedIssue = null;
-            while (IssueLoadModel.getSumLoad(currentLoad) < 0.95) {  // if load < 95%
+//            while (IssueLoadModel.getSumLoad(currentLoad) < 0.95) {  // if load < 95%
+            while (user.getIssues().stream().count() > 0) {  // if load < 95%
                 // TODO Распространить будущие задачи, если загрузка > 0.95
                 selectedIssue = this.getFutureIssue(currentLocalDate, user, currentLoad);
-                currentLoad.add(new IssueLoadModel(selectedIssue, this.getLoad(selectedIssue)));
-                if (selectedIssue == null) {
+                if (selectedIssue != null) {
+                    currentLoad.add(new IssueLoadModel(selectedIssue, this.getLoad(selectedIssue)));
+                } else {
                     break;
                 }
+
             }
 
             if (IssueLoadModel.getSumLoad(currentLoad) > 0) {
@@ -87,30 +91,41 @@ public class UserDataService {
                     String day = this.getDateString(days, currentDate);
                     Date deadlineDate = load.issue.getDueDate() != null ? load.issue.getDueDate() : load.issue.getSprint().getEndDate();
                     ZonedDateTime dueDate = ZonedDateTime.ofInstant(deadlineDate.toInstant(), ZoneId.systemDefault());
-                    double daysToDeadline = Period.between(currentLocalDate, dueDate.toLocalDate()).getDays();
+                    double daysToDeadline = Period.between(currentDate, dueDate.toLocalDate()).getDays() - this.getFreeDays(currentDate, dueDate.toLocalDate());
 
                     if (daysToDeadline == 0) {  // если сегодня - день дедлайна по задаче, то оставшуюся нагрузку закидываем на сегодняшний день
-                        this.addLoadInfo(loadData, currentDate, load);
+                        this.addLoadInfo(loadData, currentDate, load, days);
                     }
                     else {
                         while (loadData.getLoad(day) + load.load > 1) {
-                            IssueLoadModel remainingLoad = new IssueLoadModel(load.issue, 1 - loadData.getLoad(day));
-                            load.removeLoad(1 - loadData.getLoad(day));
-                            this.addLoadInfo(loadData, currentDate, remainingLoad);
+                            daysToDeadline = Period.between(currentDate, dueDate.toLocalDate()).getDays()  - this.getFreeDays(currentDate, dueDate.toLocalDate());
+                            if (daysToDeadline == 0) {
+                                this.addLoadInfo(loadData, currentDate, load, days);
+                                break;
+                            }
+                            else {
+                                IssueLoadModel remainingLoad = new IssueLoadModel(load.issue, 1 - loadData.getLoad(day));
+                                load.removeLoad(1 - loadData.getLoad(day));
+                                this.addLoadInfo(loadData, currentDate, remainingLoad, days);
 
-                            currentDate = currentDate.plusDays(1);
-                            day = this.getDateString(days, currentDate);
+                                if (loadData.getLoad(day) >= 1 && (daysToDeadline < 0 || daysToDeadline >= 1)) {
+                                    currentDate = currentDate.plusDays(1);
+                                    day = this.getDateString(days, currentDate);
+                                }
+                            }
                         }
-                        this.addLoadInfo(loadData, currentDate, load);
+                        this.addLoadInfo(loadData, currentDate, load, days);
                     }
-                    currentDate = currentDate.plusDays(1);
+                    if (loadData.getLoad(day) >= 1 && (daysToDeadline < 0 || daysToDeadline >= 1)) {
+                        currentDate = currentDate.plusDays(1);
+                    }
                 }
             }
 
             userLoads.add(loadData);
             currentDate = currentLocalDate;
         }
-        days.sort(Comparator.naturalOrder());
+        //days.sort(Comparator.naturalOrder());
 
         for (UserLoadModel userLoad : userLoads) {
             for (String day : days) {
@@ -144,6 +159,7 @@ public class UserDataService {
                     .mapToInt(x->(int)x[0]).findFirst();
             if (index.isPresent()) {
                 IssueEntity selectedIssue = futureIssues.get(index.getAsInt());
+                user.removeIssueById(selectedIssue.getId());
                 return selectedIssue;
             }
         }
@@ -158,13 +174,32 @@ public class UserDataService {
         return day;
     }
 
-    private void addLoadInfo(UserLoadModel loadData, LocalDate currentDate, IssueLoadModel load) {
-        String day = currentDate.format(dateFormat);
+    private LocalDate moveToFirstWorkDay(LocalDate currentDate) {
+        while (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentDate.getDayOfWeek() == DayOfWeek.SUNDAY){
+            currentDate = currentDate.plusDays(1);
+        }
+        return currentDate;
+    }
+
+    private int getFreeDays(LocalDate currentDate, LocalDate deadlineDate) {
+        int freeDays = 0;
+        while (Period.between(currentDate, deadlineDate).getDays() >= 0){
+            if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                freeDays++;
+            }
+            currentDate = currentDate.plusDays(1);
+        }
+        return freeDays;
+    }
+
+    private void addLoadInfo(UserLoadModel loadData, LocalDate currentDate, IssueLoadModel load, List<String> days) {
+        String day = this.getDateString(days, currentDate);
         boolean isAdded = false;
         do {
             if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 loadData.addLoad(day);
                 currentDate = currentDate.plusDays(1);
+                day = this.getDateString(days, currentDate);
             } else {
                 loadData.addLoad(currentDate.format(dateFormat), load);
                 isAdded = true;
@@ -176,6 +211,7 @@ public class UserDataService {
         if (issue == null) {
             return 0;
         }
-        return ((double)issue.getAggregatetimeoriginalestimate() - issue.getTimespent()) / (secondsInHour * 8);
+        double diff = (double)issue.getAggregatetimeoriginalestimate() - issue.getTimespent();
+        return diff > 0 ? diff / (secondsInHour * 8) : 0;
     }
 }

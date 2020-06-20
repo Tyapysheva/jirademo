@@ -50,11 +50,18 @@ public class UserEntity {
         this.displayName = displayName;
     }
 
-    public Iterable<IssueEntity> getIssues() {
+    public Collection<IssueEntity> getIssues() {
         if (issues == null) {
             issues = new ArrayList<>();
         }
         return issues;
+    }
+
+    public void removeIssueById(Long id) {
+        if (issues == null) {
+            issues = new ArrayList<>();
+        }
+        issues.removeIf(x -> x.getId() == id);
     }
 
     public void setIssues(Collection<IssueEntity> issues) {
@@ -86,7 +93,7 @@ public class UserEntity {
     public String getRoleString() {
         if (roles == null) {
             roles = new ArrayList<>();
-        };
+        }
         Collection<String> roleNames = roles.stream()
                 .map(x -> x.getName())
                 .filter(x -> !"Administrators".equals(x))
