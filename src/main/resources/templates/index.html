@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
-
+<body>
     <div class="layout mdl-layout mdl-js-layout">
         <div th:replace="fragments :: header" />
 
@@ -149,6 +149,12 @@
                             }
                         }
                     }]
+                },
+
+                buttons: {
+                    contextButton: {
+                        menuItems: ['downloadPNG', 'downloadSVG', 'separator', 'label']
+                    }
                 }
             });
         };

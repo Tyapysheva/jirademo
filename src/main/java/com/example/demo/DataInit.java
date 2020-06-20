@@ -65,7 +65,7 @@ public class DataInit implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         loadData();
     }
 
@@ -97,6 +97,10 @@ public class DataInit implements ApplicationRunner {
         this.userDAO.saveAll(users);
         this.sprintDAO.saveAll(sprints);
 
+        List<Long> issueIds = StreamSupport.stream(issues.spliterator(), false)
+                .map(x -> x.getId())
+                .collect(Collectors.toList());
+        issueIds.forEach(i -> this.issueDAO.deleteById(i));
         this.issueDAO.saveAll(issues);
 
 //        try (InputStream inputStream = new FileInputStream("target/classes/application.properties")) {
