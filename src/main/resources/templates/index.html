@@ -6,7 +6,7 @@
 
     <title>Загрузка сотрудников в JIRA</title>
 
-    <link rel="stylesheet" th:href="@{/external/mdl-v1.1.2/material.min.css}"/>
+    <link rel="stylesheet" th:href="@{/external/mdl-v1.1.2/material.css}"/>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -40,6 +40,7 @@
                         </form>
                     </div>
                     <a th:href="@{/issues}" class="nav-link">Задачи</a>
+                    <a th:href="@{/settings}" class="nav-link">Настройки</a>
                     <form method="POST" th:action="@{/refresh/(returnUrl=${'/'})}">
                         <button class="mdl-button" type="submit" name="submit">
                             <i class="material-icons mdl-list__item-icon">refresh</i>
@@ -88,6 +89,7 @@
     </div>
 
     <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/external/mdl-v1.1.2/material.js}"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>

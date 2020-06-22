@@ -47,7 +47,17 @@ section.card-block > .section-header {
 }
 
 section.card-block > .section-header.workload{
-    grid-template-columns: 1fr 6fr 1fr 1fr;
+    grid-template-columns: 1fr 7fr 1fr 1fr 1fr;
+    justify-items: center;
+}
+
+section.card-block > .section-header.settings{
+    grid-template-columns: 1fr 7fr 1fr 1fr 1fr;
+    justify-items: center;
+}
+
+section.card-block > .section-header.issues{
+    grid-template-columns: 1fr 7fr 1fr 1fr 1fr;
     justify-items: center;
 }
 

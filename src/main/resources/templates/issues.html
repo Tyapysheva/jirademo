@@ -6,7 +6,7 @@
 
     <title>Загрузка сотрудников в JIRA</title>
 
-    <link rel="stylesheet" th:href="@{/external/mdl-v1.1.2/material.min.css}"/>
+    <link rel="stylesheet" th:href="@{/external/mdl-v1.1.2/material.css}"/>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -16,9 +16,10 @@
         <div th:replace="fragments :: header" />
         <div class="mdl-grid">
             <section class="card-block mdl-shadow--2dp mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                <div class="section-header">
+                <div class="section-header issues">
                     <h5>Задачи</h5>
                     <a th:href="@{/}" class="nav-link">Нагрузка</a>
+                    <a th:href="@{/settings}" class="nav-link">Настройки</a>
                     <form method="POST" th:action="@{/refresh/(returnUrl=${'/issues'})}">
                         <button class="mdl-button" type="submit" name="submit">
                             <i class="material-icons mdl-list__item-icon">refresh</i>
@@ -63,5 +64,6 @@
     </div>
 <!--    <script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>-->
     <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/external/mdl-v1.1.2/material.js}"></script>
 </body>
 </html>

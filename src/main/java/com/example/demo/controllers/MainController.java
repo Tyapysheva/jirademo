@@ -11,14 +11,21 @@ import com.example.demo.repositories.UserDAO;
 import com.example.demo.viewModels.UserLoadCompactModel;
 import com.example.demo.viewModels.UserLoadViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -31,6 +38,15 @@ public class MainController {
     private DataInit initializer;
     private String allProjectString = "Все проекты";
     private String allRolesString = "Все роли";
+
+    @Value("${credentials.username}")
+    private String username;
+
+    @Value("${credentials.token}")
+    private String token;
+
+    @Value("${jira.address}")
+    private String address;
 
     @Autowired
     public MainController(IssueDAO issueDAO, UserDAO userDAO, ProjectDAO projectDAO,
@@ -99,31 +115,44 @@ public class MainController {
         return "issues";
     }
 
+    @GetMapping("/settings")
+    public String settings(Model m) {
+        m.addAttribute("address", this.address);
+        m.addAttribute("username", this.username);
+        m.addAttribute("token", this.token);
+        return "settings";
+    }
+
+    @PostMapping("/settings")
+    public ModelAndView saveSettings(@RequestParam String submit,
+                                     @RequestParam String address,
+                                     @RequestParam String username,
+                                     @RequestParam String token) {
+        if (submit.equals("save")) {
+            this.saveProperties(address, username, token);
+        }
+        return new ModelAndView("redirect:/");
+    }
+
     @PostMapping("/refresh")
     public ModelAndView refreshData(@RequestParam("returnUrl") String returnUrl, Model m) {
         initializer.loadData();
         return new ModelAndView("redirect:" + returnUrl);
     }
 
-//    @ResponseBody
-//    @RequestMapping("/issues")
-//    public Iterable<IssueEntity> issues() {
-//        //Iterable<IssueEntity> issues = issueDataService.getAll();
-//        Iterable<IssueEntity> entities = issueDAO.findAll();
-//        return entities;
-//    }
-//
-//    @ResponseBody
-//    @RequestMapping("/issues/types")
-//    public Iterable<IssueTypeEntity> issueTypes() {
-//        Iterable<IssueTypeEntity> entities = issueTypeDAO.findAll();
-//        return entities;
-//    }
-//
-//    @ResponseBody
-//    @RequestMapping("/issues/statuses")
-//    public Iterable<IssueStatusEntity> issueStatuses() {
-//        Iterable<IssueStatusEntity> entities = issueStatusDAO.findAll();
-//        return entities;
-//    }
+    private void saveProperties(String address, String username, String token) {
+        try (InputStream inputStream = new FileInputStream("target/classes/application.properties")) {
+            Properties props = new Properties();
+            props.load(inputStream);
+            props.setProperty("jira.address", address);
+            props.setProperty("credentials.username", username);
+            props.setProperty("credentials.token", token);
+            OutputStream outputStream = new FileOutputStream("target/classes/application.properties");
+            props.store(outputStream, null);
+        }
+        catch (IOException ex) {
+            System.out.println("Alarm, error!");
+        }
+    }
+
 }
