@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.DataInit;
+import com.example.demo.dataServices.PropertyDataService;
 import com.example.demo.dataServices.UserDataService;
 import com.example.demo.model.IssueEntity;
 import com.example.demo.model.RoleEntity;
@@ -22,10 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -35,6 +33,7 @@ public class MainController {
     private UserDAO userDAO;
     private ProjectDAO projectDAO;
     private UserDataService userDataService;
+    private PropertyDataService propertyDataService;
     private DataInit initializer;
     private String allProjectString = "Все проекты";
     private String allRolesString = "Все роли";
@@ -50,11 +49,13 @@ public class MainController {
 
     @Autowired
     public MainController(IssueDAO issueDAO, UserDAO userDAO, ProjectDAO projectDAO,
-                          DataInit initializer, UserDataService userDataService) {
+                          DataInit initializer, UserDataService userDataService,
+                          PropertyDataService propertyDataService) {
         this.issueDAO = issueDAO;
         this.userDAO = userDAO;
         this.projectDAO = projectDAO;
         this.userDataService = userDataService;
+        this.propertyDataService = propertyDataService;
         this.initializer = initializer;
     }
 
@@ -129,7 +130,15 @@ public class MainController {
                                      @RequestParam String username,
                                      @RequestParam String token) {
         if (submit.equals("save")) {
-            this.saveProperties(address, username, token);
+            boolean result = this.propertyDataService.saveProperties(address, username, token);
+            if (!result) {
+                ModelAndView mav = new ModelAndView("settings");
+                mav.addObject("errorMessage", "Данный адрес недоступен, введите другой");
+                mav.addObject("address", address);
+                mav.addObject("username", username);
+                mav.addObject("token", token);
+                return mav;
+            }
         }
         return new ModelAndView("redirect:/");
     }
@@ -139,20 +148,4 @@ public class MainController {
         initializer.loadData();
         return new ModelAndView("redirect:" + returnUrl);
     }
-
-    private void saveProperties(String address, String username, String token) {
-        try (InputStream inputStream = new FileInputStream("target/classes/application.properties")) {
-            Properties props = new Properties();
-            props.load(inputStream);
-            props.setProperty("jira.address", address);
-            props.setProperty("credentials.username", username);
-            props.setProperty("credentials.token", token);
-            OutputStream outputStream = new FileOutputStream("target/classes/application.properties");
-            props.store(outputStream, null);
-        }
-        catch (IOException ex) {
-            System.out.println("Alarm, error!");
-        }
-    }
-
 }

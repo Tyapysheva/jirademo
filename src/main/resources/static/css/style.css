@@ -139,3 +139,9 @@ section.card-block .backLink > span {
 .h5-workload {
     margin: 0;
 }
+
+#error-popup-old {
+    top: 50px;
+    bottom: 92%;
+    transform: translate(50%, -80px);  /*translate(0,-80px);*/
+}

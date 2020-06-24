@@ -87,4 +87,9 @@ public class DemoApplication {
 
     @Bean
     public RoleDataService roleDataService() { return new RoleDataService(); }
+
+    @Bean
+    public PropertyDataService propertyDataService() {
+        return new PropertyDataService();
+    }
 }

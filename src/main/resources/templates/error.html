@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Загрузка сотрудников в JIRA</title>
+
+    <link rel="stylesheet" th:href="@{/external/mdl-v1.1.2/material.css}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <div class="layout mdl-layout mdl-js-layout">
+        <div th:replace="fragments :: header" />
+
+        <main class="mdl-layout__content">
+            <div class="mdl-grid">
+                <section class="card-block mdl-shadow--2dp mdl-cell mdl-cell--12-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                    <div class="data-block">
+                        <div>Произошла ошибка</div>
+                        <div th:text="${exception.getMessage()}"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <div th:replace="fragments :: footer" />
+    </div>
+</body>
+</html>

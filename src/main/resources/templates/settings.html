@@ -45,11 +45,42 @@
                 </section>
             </div>
         </main>
+        <div id="error-popup" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button type="button" class="mdl-snackbar__action"></button>
+        </div>
+
+        <div id="demo-snackbar-example" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__icon">
+                <i class="material-icons">email</i>
+            </div>
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
 
         <div th:replace="fragments :: footer" />
     </div>
 <!--    <script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>-->
     <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery.js}"></script>
     <script type="text/javascript" th:src="@{/external/mdl-v1.1.2/material.js}"></script>
+    <script th:inline="javascript">
+        let errorMessage = /*[[${errorMessage}]]*/ "";
+
+        (function () {
+            'use strict';
+            var snackbarContainer = document.querySelector('#error-popup');
+            window.addEventListener('load', function () {
+                'use strict';
+                if (errorMessage && errorMessage.length > 0) {
+                    var data = {
+                        message: errorMessage,
+                        timeout: 15000,
+                    };
+
+                    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
