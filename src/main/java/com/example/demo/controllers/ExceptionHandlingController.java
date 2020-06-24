@@ -13,7 +13,7 @@ public class ExceptionHandlingController {
         System.out.format("Request: %s, raised %s", req.getRequestURL(), ex);
 
         ModelAndView mav = new ModelAndView("error");
-        mav.addObject("exception", ex);
+        mav.addObject("exception", ex.getMessage());
         mav.addObject("url", req.getRequestURL());
 //        mav.setViewName("error");
         return mav;

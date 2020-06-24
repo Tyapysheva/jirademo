@@ -91,16 +91,16 @@ public class UserDataService {
                     String day = this.getDateString(days, currentDate);
                     Date deadlineDate = load.issue.getDueDate() != null ? load.issue.getDueDate() : load.issue.getSprint().getEndDate();
                     ZonedDateTime dueDate = ZonedDateTime.ofInstant(deadlineDate.toInstant(), ZoneId.systemDefault());
-                    double daysToDeadline = Period.between(currentDate, dueDate.toLocalDate()).getDays() - this.getFreeDays(currentDate, dueDate.toLocalDate());
+                    double daysToDeadline = Period.between(currentDate, dueDate.toLocalDate()).getDays() - this.getFreeDays(currentDate, dueDate.toLocalDate()) + 1;
 
-                    if (daysToDeadline == 0) {  // если сегодня - день дедлайна по задаче, то оставшуюся нагрузку закидываем на сегодняшний день
+                    if (daysToDeadline == 0 || daysToDeadline == 1) {  // если сегодня - день дедлайна по задаче, то оставшуюся нагрузку закидываем на сегодняшний день
                         this.addLoadInfo(loadData, currentDate, load, days);
                     }
                     else {
                         while (loadData.getLoad(day) + load.load > 1) {
-                            daysToDeadline = Period.between(currentDate, dueDate.toLocalDate()).getDays()  - this.getFreeDays(currentDate, dueDate.toLocalDate());
-                            if (daysToDeadline == 0) {
-                                this.addLoadInfo(loadData, currentDate, load, days);
+                            daysToDeadline = Period.between(currentDate, dueDate.toLocalDate()).getDays()  - this.getFreeDays(currentDate, dueDate.toLocalDate()) + 1;
+                            if (daysToDeadline == 0 || daysToDeadline == 1) {
+                                //this.addLoadInfo(loadData, currentDate, load, days);
                                 break;
                             }
                             else {
@@ -110,6 +110,7 @@ public class UserDataService {
 
                                 if (loadData.getLoad(day) >= 1 && (daysToDeadline < 0 || daysToDeadline >= 1)) {
                                     currentDate = currentDate.plusDays(1);
+                                    currentDate = this.moveToFirstWorkDay(currentDate);
                                     day = this.getDateString(days, currentDate);
                                 }
                             }
@@ -118,6 +119,7 @@ public class UserDataService {
                     }
                     if (loadData.getLoad(day) >= 1 && (daysToDeadline < 0 || daysToDeadline >= 1)) {
                         currentDate = currentDate.plusDays(1);
+                        currentDate = this.moveToFirstWorkDay(currentDate);
                     }
                 }
             }

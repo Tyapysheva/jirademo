@@ -88,7 +88,9 @@ public class IssueDataService {
         issueEntity.setIssueType(modelMapper.map(issue.fields.issuetype, IssueTypeEntity.class));
         issueEntity.setIssueStatus(modelMapper.map(issue.fields.status, IssueStatusEntity.class));
         issueEntity.setProject(modelMapper.map(issue.fields.project, ProjectEntity.class));
-        issueEntity.setUser(modelMapper.map(issue.fields.assignee, UserEntity.class));
+        if (issue.fields.assignee != null) {
+            issueEntity.setUser(modelMapper.map(issue.fields.assignee, UserEntity.class));
+        }
         issueEntity.setPriority(modelMapper.map(issue.fields.priority, PriorityEntity.class));
         issueEntity.setSummary(issue.fields.summary);
 
@@ -102,11 +104,13 @@ public class IssueDataService {
             issueEntity.setDueDate(dueDate.get());
         }
 
-        Optional<String> sprintData = Arrays.stream(issue.fields.customfield_10020)
-                .filter(x->x.contains("service.sprint.Sprint"))
-                .findFirst();
-        if (sprintData.isPresent()) {
-            issueEntity.setSprint(parseSprint(sprintData.get()));
+        if (issue.fields.customfield_10020 != null) {
+            Optional<String> sprintData = Arrays.stream(issue.fields.customfield_10020)
+                    .filter(x -> x.contains("service.sprint.Sprint"))
+                    .findFirst();
+            if (sprintData.isPresent()) {
+                issueEntity.setSprint(parseSprint(sprintData.get()));
+            }
         }
         return issueEntity;
     }

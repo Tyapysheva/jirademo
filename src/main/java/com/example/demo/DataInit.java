@@ -85,6 +85,7 @@ public class DataInit implements ApplicationRunner {
 
         List<SprintEntity> sprints = StreamSupport.stream(issues.spliterator(), false)
                 .map(x -> x.getSprint())
+                .filter(x -> x != null)
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -95,7 +96,6 @@ public class DataInit implements ApplicationRunner {
         this.dashboardDAO.saveAll(dashboards);
         this.roleDAO.saveAll(roles);
         this.userDAO.saveAll(users);
-        this.sprintDAO.saveAll(sprints);
 
         List<Long> issueIds = StreamSupport.stream(issues.spliterator(), false)
                 .map(x -> x.getId())
@@ -105,6 +105,15 @@ public class DataInit implements ApplicationRunner {
                 this.issueDAO.deleteById(i);
             }
         });
+        List<Long> sprintIds = StreamSupport.stream(sprints.spliterator(), false)
+                .map(x -> x.getId())
+                .collect(Collectors.toList());
+        sprintIds.forEach(i -> {
+            if (this.sprintDAO.existsById(i)) {
+                this.sprintDAO.deleteById(i);
+            }
+        });
+        this.sprintDAO.saveAll(sprints);
         this.issueDAO.saveAll(issues);
 
 //        try (InputStream inputStream = new FileInputStream("target/classes/application.properties")) {
