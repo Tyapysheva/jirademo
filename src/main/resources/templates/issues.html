@@ -49,8 +49,8 @@
                                     <td th:text="${issue.getKey()}"></td>
                                     <td th:text="${issue.getSummary()}"></td>
                                     <td th:text="${issue.issueType.getName()}"></td>
-                                    <td th:text="${issue.user.getDisplayName()}"></td>
-                                    <td th:text="${issue.sprint.getName()}"></td>
+                                    <td th:text='${issue.user != null ? issue.user.getDisplayName() : ""}'></td>
+                                    <td th:text='${issue.sprint != null ? issue.sprint.getName() : ""}'></td>
                                 </tr>
                             </th:block>
                             </tbody>
